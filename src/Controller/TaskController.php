@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Notifier\ChatterInterface;
+use Symfony\Component\Notifier\Exception\TransportExceptionInterface;
 use Symfony\Component\Notifier\Message\ChatMessage;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -80,30 +81,36 @@ class TaskController extends AbstractController
     /**
      * @throws Exception
      */
-    public function check(): ?string
+    public function sendTaskReminders(): ?string
     {
         $currentTime = (new DateTimeImmutable('now', new DateTimeZone('Europe/Warsaw')))
             ->format('Y-m-d H:i');
 
-        foreach ($this->repository->findAll() as $task) {
-            if (!$task->isStatus()) {
-                $reminderTimeAdjusted = $task->getDeadLine()
-//                    ->modify('+30 minutes')
-                    ->format('Y-m-d H:i');
+        $tasks = $this->repository->findUncompletedTasks();
 
-                if ($reminderTimeAdjusted < $currentTime) {
-                    $chatMessage = new ChatMessage($task->getTitle());
-
-                    $this->chatter->send($chatMessage);
-
-                    $task->setStatus(true);
-
-                    $this->entityManager->flush();
-
-                    return $task->getTitle();
-                }
+        foreach ($tasks as $task) {
+            if ($this->isReminderTime($task->getDeadLine(), $currentTime)) {
+                $this->sendTaskReminder($task);
+                $task->setStatus(true);
+                $this->entityManager->flush();
+                return $task->getTitle();
             }
         }
         return null;
+    }
+
+    private function isReminderTime(DateTimeImmutable $deadline, string $currentTime): bool
+    {
+        $reminderTimeAdjusted = $deadline->format('Y-m-d H:i');
+        return $reminderTimeAdjusted < $currentTime;
+    }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
+    private function sendTaskReminder(Task $task): void
+    {
+        $chatMessage = new ChatMessage($task->getTitle());
+        $this->chatter->send($chatMessage);
     }
 }

@@ -21,6 +21,15 @@ class TaskRepository extends ServiceEntityRepository
         parent::__construct($registry, Task::class);
     }
 
+    public function findUncompletedTasks()
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.status = :f')
+            ->setParameter('f',false)
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Task[] Returns an array of Task objects
 //     */

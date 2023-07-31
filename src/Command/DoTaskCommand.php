@@ -38,7 +38,7 @@ class DoTaskCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        if ($this->taskController->check() !== null) {
+        if ($this->taskController->sendTaskReminders() !== null) {
             $io->success('Massage is sent');
         }
 
