@@ -4,7 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Task;
 use App\Repository\TaskRepository;
+use DateTimeImmutable;
+use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,10 +39,10 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     #[Route('/create', name: 'create_task', methods: ['POST'])]
-    public function create(Request $request,): Response
+    public function create(Request $request): Response
     {
         $task = new Task();
         $title = trim(htmlspecialchars($request->request->get('title')));
@@ -48,7 +51,7 @@ class TaskController extends AbstractController
         }
         $deadline = $request->request->get('deadline');
         if ($deadline) {
-            $task->setDeadLine(\DateTimeImmutable::createFromFormat('Y-m-d\TH:i', $deadline));
+            $task->setDeadLine(DateTimeImmutable::createFromFormat('Y-m-d\TH:i', $deadline));
         }
         $task->setTitle($title);
         $task->setCreatedAt();
@@ -59,7 +62,7 @@ class TaskController extends AbstractController
     }
 
     #[Route('/switch_status/{id}', name: 'switch_status')]
-    public function switchStatus(Task $task,): Response
+    public function switchStatus(Task $task): Response
     {
         $task->setStatus(!$task->isStatus());
         $this->entityManager->flush();
@@ -75,11 +78,12 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function check(): ?string
     {
-        $currentTime = (new \DateTimeImmutable('now', new \DateTimeZone('Europe/Warsaw')))->format('Y-m-d H:i');
+        $currentTime = (new DateTimeImmutable('now', new DateTimeZone('Europe/Warsaw')))
+            ->format('Y-m-d H:i');
 
         foreach ($this->repository->findAll() as $task) {
             if (!$task->isStatus()) {

@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\TaskRepository;
+use DateTimeImmutable;
+use DateTimeZone;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
 class Task
@@ -20,10 +23,10 @@ class Task
     private ?bool $status = null;
 
     #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $createdAt = null;
+    private ?DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $DeadLine = null;
+    private ?DateTimeImmutable $DeadLine = null;
 
     public function getId(): ?int
     {
@@ -54,28 +57,28 @@ class Task
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     #[ORM\PrePersist]
     public function setCreatedAt(): static
     {
-        $this->createdAt = new \DateTimeImmutable('now',new \DateTimeZone('Europe/Warsaw'));
+        $this->createdAt = new DateTimeImmutable('now',new DateTimeZone('Europe/Warsaw'));
 
         return $this;
     }
 
-    public function getDeadLine(): ?\DateTimeImmutable
+    public function getDeadLine(): ?DateTimeImmutable
     {
         return $this->DeadLine;
     }
 
-    public function setDeadLine(?\DateTimeImmutable $DeadLine): static
+    public function setDeadLine(?DateTimeImmutable $DeadLine): static
     {
         $this->DeadLine = $DeadLine;
 
