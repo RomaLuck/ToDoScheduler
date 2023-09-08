@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Controller\TaskController;
+use App\Service\SendMessageService;
 use Exception;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -16,12 +17,12 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class DoTaskCommand extends Command
 {
-    public TaskController $taskController;
+    public SendMessageService $messageService;
 
-    public function __construct(TaskController $taskController, string $name = null)
+    public function __construct(SendMessageService $messageService, string $name = null)
     {
         parent::__construct($name);
-        $this->taskController = $taskController;
+        $this->messageService = $messageService;
     }
 
     protected function configure(): void
@@ -38,7 +39,7 @@ class DoTaskCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        if ($this->taskController->sendTaskReminders() !== null) {
+        if ($this->messageService->sendTaskReminders() !== null) {
             $io->success('Massage is sent');
         }
 
