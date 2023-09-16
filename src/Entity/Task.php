@@ -26,7 +26,11 @@ class Task
     private ?DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
-    private ?DateTimeImmutable $DeadLine = null;
+    private ?DateTimeImmutable $deadLine = null;
+
+    #[ORM\ManyToOne(inversedBy: 'task')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     public function getId(): ?int
     {
@@ -75,12 +79,24 @@ class Task
 
     public function getDeadLine(): ?DateTimeImmutable
     {
-        return $this->DeadLine;
+        return $this->deadLine;
     }
 
-    public function setDeadLine(?DateTimeImmutable $DeadLine): static
+    public function setDeadLine(?DateTimeImmutable $deadLine): static
     {
-        $this->DeadLine = $DeadLine;
+        $this->deadLine = $deadLine;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }
