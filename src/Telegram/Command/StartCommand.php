@@ -20,7 +20,7 @@ class StartCommand extends Command
             reply_markup: InlineKeyboardMarkup::make()
                 ->addRow(
                     InlineKeyboardButton::make('Tasks', callback_data: 'tasks'),
-                    InlineKeyboardButton::make('Other', callback_data: 'other')
+                    InlineKeyboardButton::make('Register', callback_data: 'register')
                 )
         );
     }
