@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Task;
+use App\Entity\User;
 use App\Repository\TaskRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -11,7 +12,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_USER')]
 class TaskController extends AbstractController
 {
     #[Route('/', name: 'app_task')]
@@ -31,6 +34,12 @@ class TaskController extends AbstractController
         $task = new Task();
         $title = trim(htmlspecialchars($request->request->get('title')));
         if (empty($title)) {
+            $this->addFlash('danger','Task is empty');
+            return $this->redirectToRoute('app_task');
+        }
+        $user = $entityManager->getRepository(User::class)->find($this->getUser());
+        if ($user === null) {
+            $this->addFlash('danger','User is not authorized');
             return $this->redirectToRoute('app_task');
         }
         $deadline = $request->request->get('deadline');
@@ -38,6 +47,8 @@ class TaskController extends AbstractController
             $task->setDeadLine(DateTimeImmutable::createFromFormat('Y-m-d\TH:i', $deadline));
         }
         $task->setTitle($title);
+        $task->setUser($user);
+        $task->setStatus(false);
         $task->setCreatedAt();
         $entityManager->persist($task);
         $entityManager->flush();
