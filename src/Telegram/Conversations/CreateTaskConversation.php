@@ -3,6 +3,7 @@
 namespace App\Telegram\Conversations;
 
 use App\Entity\Task;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 use SergiX44\Nutgram\Conversations\Conversation;
@@ -40,6 +41,7 @@ class CreateTaskConversation extends Conversation
             $this->end();
         }
         $task->setTitle($title);
+        $task->setUser($this->entityManager->getRepository(User::class)->findOneBy(['chat_id' => $bot->chatId()]));
         $task->setCreatedAt();
         $task->setStatus(false);
         $this->entityManager->persist($task);

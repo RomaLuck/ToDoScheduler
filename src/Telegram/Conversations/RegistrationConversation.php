@@ -59,6 +59,7 @@ class RegistrationConversation extends Conversation
         $password = $this->userPasswordHasher->hashPassword($user, trim(htmlspecialchars($bot->message()->text)));
         $user->setPassword($password);
         $user->setRoles(['ROLE_USER']);
+        $user->setChatId((string)$bot->chatId());
         $this->entityManager->persist($user);
         $this->entityManager->flush();
         $bot->sendMessage('User has been registered successfully');

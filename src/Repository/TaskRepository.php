@@ -21,11 +21,13 @@ class TaskRepository extends ServiceEntityRepository
         parent::__construct($registry, Task::class);
     }
 
-    public function findUncompletedTasks()
+    public function findUncompletedTasks($user)
     {
         return $this->createQueryBuilder('t')
             ->andWhere('t.status = :f')
-            ->setParameter('f',false)
+            ->setParameter('f', false)
+            ->andWhere('t.user = :user')
+            ->setParameter(':user', $user)
             ->getQuery()
             ->getResult();
     }

@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Task;
+use App\Entity\User;
 use App\Repository\TaskRepository;
 use DateTimeImmutable;
 use DateTimeZone;
@@ -18,7 +19,7 @@ class SendMessageService
     private TaskRepository $repository;
     private EntityManagerInterface $entityManager;
 
-    public function __construct(ChatterInterface $chatter, TaskRepository $repository,EntityManagerInterface $entityManager)
+    public function __construct(ChatterInterface $chatter, TaskRepository $repository, EntityManagerInterface $entityManager)
     {
         $this->chatter = $chatter;
         $this->repository = $repository;
@@ -33,14 +34,17 @@ class SendMessageService
         $currentTime = (new DateTimeImmutable('now', new DateTimeZone('Europe/Warsaw')))
             ->format('Y-m-d H:i');
 
-        $tasks = $this->repository->findUncompletedTasks();
+        $users = $this->entityManager->getRepository(User::class)->findAll();
+        foreach ($users as $user) {
+            $tasks = $this->repository->findUncompletedTasks($user);
 
-        foreach ($tasks as $task) {
-            if ($this->isReminderTime($task->getDeadLine(), $currentTime)) {
-                $this->sendTaskReminder($task);
-                $task->setStatus(true);
-                $this->entityManager->flush();
-                return $task->getTitle();
+            foreach ($tasks as $task) {
+                if ($this->isReminderTime($task->getDeadLine(), $currentTime)) {
+                    $this->sendTaskReminder($task);
+                    $task->setStatus(true);
+                    $this->entityManager->flush();
+                    return $task->getTitle();
+                }
             }
         }
         return null;
