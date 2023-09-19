@@ -37,7 +37,7 @@ class RegistrationConversation extends Conversation
             $bot->sendMessage('Enter your email or write "exit"');
             $this->next('checkEmail');
         } else {
-            throw new \Exception('User is already registered');
+            throw new \Exception('User has been already registered');
         }
     }
 
