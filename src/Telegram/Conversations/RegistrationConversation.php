@@ -7,8 +7,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 use SergiX44\Nutgram\Conversations\Conversation;
 use SergiX44\Nutgram\Nutgram;
-use SergiX44\Nutgram\Telegram\Types\Keyboard\InlineKeyboardButton;
-use SergiX44\Nutgram\Telegram\Types\Keyboard\InlineKeyboardMarkup;
+use SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton;
+use SergiX44\Nutgram\Telegram\Types\Keyboard\ReplyKeyboardMarkup;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class RegistrationConversation extends Conversation
@@ -34,7 +34,14 @@ class RegistrationConversation extends Conversation
             $bot->chatId(),
             array_map(static fn($user) => $user->getChatId(), $this->entityManager->getRepository(User::class)->findAll())
         )) {
-            $bot->sendMessage('Enter your email or write "exit"');
+            $bot->sendMessage(
+                text: 'Enter your email',
+                reply_markup: ReplyKeyboardMarkup::make(
+                    resize_keyboard: true,
+                    one_time_keyboard: true,
+                )
+                    ->addRow(KeyboardButton::make('Exit'))
+            );
             $this->next('checkEmail');
         } else {
             throw new \Exception('User has been already registered');
@@ -47,7 +54,7 @@ class RegistrationConversation extends Conversation
     public function checkEmail(Nutgram $bot): void
     {
         $text = $bot->message()->text ?? '';
-        if (false !== stripos($text, "exit")) {
+        if (false !== stripos($text, "Exit")) {
             $this->end();
         } elseif (preg_match('!^[\w\-.]+@([\w\-]+.)+[\w\-]{2,4}$!iu', $text, $validatedEmail)) {
             $this->email = $validatedEmail[0];
@@ -73,11 +80,13 @@ class RegistrationConversation extends Conversation
         $this->entityManager->persist($user);
         $this->entityManager->flush();
         $bot->sendMessage(
-            text: 'User has been registered successfully',
-            reply_markup: InlineKeyboardMarkup::make()
+            text: "User has been registered successfully \xF0\x9F\x8E\x89",
+            reply_markup: ReplyKeyboardMarkup::make(
+                resize_keyboard: true,
+            )
                 ->addRow(
-                    InlineKeyboardButton::make('Create new task', callback_data: 'create_task'),
-                    InlineKeyboardButton::make('Your tasks', callback_data: 'show_tasks')
+                    KeyboardButton::make("\xF0\x9F\x95\x9B Create new task"),
+                    KeyboardButton::make("\xF0\x9F\x94\xA5 My tasks")
                 )
         );
         $this->end();

@@ -3,8 +3,8 @@
 namespace App\Telegram\Command;
 
 use SergiX44\Nutgram\Nutgram;
-use SergiX44\Nutgram\Telegram\Types\Keyboard\InlineKeyboardButton;
-use SergiX44\Nutgram\Telegram\Types\Keyboard\InlineKeyboardMarkup;
+use SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton;
+use SergiX44\Nutgram\Telegram\Types\Keyboard\ReplyKeyboardMarkup;
 
 class TaskCommand
 {
@@ -12,10 +12,12 @@ class TaskCommand
     {
         $bot->sendMessage(
             text: 'Choose action!',
-            reply_markup: InlineKeyboardMarkup::make()
+            reply_markup: ReplyKeyboardMarkup::make(
+                resize_keyboard: true,
+            )
                 ->addRow(
-                    InlineKeyboardButton::make('Create new task', callback_data: 'create_task'),
-                    InlineKeyboardButton::make('Your tasks', callback_data: 'show_tasks')
+                    KeyboardButton::make("\xF0\x9F\x95\x9B Create new task"),
+                    KeyboardButton::make("\xF0\x9F\x94\xA5 My tasks")
                 )
         );
     }

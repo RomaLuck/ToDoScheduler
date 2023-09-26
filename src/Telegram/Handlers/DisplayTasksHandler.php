@@ -6,6 +6,7 @@ use App\Entity\Task;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use SergiX44\Nutgram\Nutgram;
+use SergiX44\Nutgram\Telegram\Properties\ParseMode;
 use SergiX44\Nutgram\Telegram\Types\Message\Message;
 
 class DisplayTasksHandler
@@ -15,13 +16,22 @@ class DisplayTasksHandler
     {
     }
 
-    public function __invoke(Nutgram $bot): ?Message
+    public function __invoke(Nutgram $bot): void
     {
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['chat_id' => $bot->userId()]);
-        $message = 'Your tasks: ' . PHP_EOL;
-        foreach ($this->entityManager->getRepository(Task::class)->findUncompletedTasks($user) as $uncompletedTask) {
-            $message .= ' - ' . $uncompletedTask->getTitle() . PHP_EOL;
+        $bot->sendMessage(
+            text: "\xF0\x9F\x94\xA5 " . '<b>Your tasks: </b>',
+            parse_mode: ParseMode::HTML,
+        );
+        $uncompletedTasks = $this->entityManager->getRepository(Task::class)->findUncompletedTasks($user);
+        if (count($uncompletedTasks) > 0) {
+            foreach ($uncompletedTasks as $uncompletedTask) {
+                $bot->sendMessage(
+                    text: "\xE2\x9E\xA1 " . $uncompletedTask->getTitle(),
+                );
+            }
+        } else {
+            $message = 'You don\'t have any task';
         }
-        return $bot->sendMessage($message);
     }
 }

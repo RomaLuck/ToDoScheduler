@@ -8,7 +8,9 @@ use SergiX44\Nutgram\Nutgram;
 
 class DeleteUserHandler
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager,){}
+    public function __construct(private readonly EntityManagerInterface $entityManager,)
+    {
+    }
 
     /**
      * @throws \Exception
@@ -21,6 +23,6 @@ class DeleteUserHandler
         }
         $this->entityManager->remove($user);
         $this->entityManager->flush();
-        $bot->sendMessage('User has been deleted successfully');
+        $bot->sendMessage("User has been deleted successfully \xF0\x9F\x98\x9E");
     }
 }
