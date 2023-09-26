@@ -34,7 +34,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Task::class, orphanRemoval: true)]
     private Collection $task;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?string $chat_id = null;
 
     public function __construct()
