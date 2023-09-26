@@ -31,7 +31,7 @@ class DisplayTasksHandler
                 );
             }
         } else {
-            $message = 'You don\'t have any task';
+            $bot->sendMessage('You don\'t have any task');
         }
     }
 }

@@ -23,8 +23,8 @@ $bot->onCallbackQueryData('info', InfoHandler::class);
 
 $bot->group(function (Nutgram $bot) {
     $bot->onCommand('tasks', TaskCommand::class);
-    $bot->onText('Create new task', CreateTaskConversation::class);
-    $bot->onText('My tasks', DisplayTasksHandler::class);
+    $bot->onText("\xF0\x9F\x95\x9B Create new task", CreateTaskConversation::class);
+    $bot->onText("\xF0\x9F\x94\xA5 My tasks", DisplayTasksHandler::class);
     $bot->onCallbackQueryData('delete_user', DeleteUserHandler::class);
 })->middleware(AuthMiddleware::class);
 
