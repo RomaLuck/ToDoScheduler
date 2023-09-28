@@ -8,6 +8,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 use SergiX44\Nutgram\Conversations\Conversation;
 use SergiX44\Nutgram\Nutgram;
+use SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton;
+use SergiX44\Nutgram\Telegram\Types\Keyboard\ReplyKeyboardMarkup;
 
 class CreateTaskConversation extends Conversation
 {
@@ -29,7 +31,16 @@ class CreateTaskConversation extends Conversation
     public function askTaskName(Nutgram $bot): void
     {
         $bot->sendMessage('What task do you want to create?');
-        $this->next('askMonthDayDeadline');
+        $this->next('checkTitle');
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    public function checkTitle(Nutgram $bot): void
+    {
+        $this->title = trim(htmlspecialchars($bot->message()->text));
+        $this->askMonthDayDeadline($bot);
     }
 
     /**
@@ -37,9 +48,50 @@ class CreateTaskConversation extends Conversation
      */
     public function askMonthDayDeadline(Nutgram $bot): void
     {
-        $this->title = trim(htmlspecialchars($bot->message()->text));
-        $bot->sendMessage('Set deadline(Format: month day)');
-        $this->next('askHourMinuteDeadline');
+        $bot->sendMessage(
+            text: 'Set deadline (Format: month day) . You can also press the buttons',
+            reply_markup: ReplyKeyboardMarkup::make(
+                resize_keyboard: true,
+                one_time_keyboard: true,
+            )
+                ->addRow(
+                    KeyboardButton::make("Today"),
+                    KeyboardButton::make("Tomorrow")
+                )
+        );
+        $this->next('checkMonthDayDeadline');
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    public function checkMonthDayDeadline(Nutgram $bot): void
+    {
+        $answer = trim(htmlspecialchars($bot->message()->text));
+        $date = match ($answer) {
+            'Today' => (new \DateTimeImmutable())->format('m d'),
+            'Tomorrow' => (new \DateTimeImmutable())->modify('+1 days')->format('m d'),
+            default => $answer,
+        };
+
+        if (preg_match('!^(?<month>\d+) (?<day>\d+)$!iu', $date, $dateMatch)) {
+            $month = sprintf("%02d", $dateMatch['month']);
+            $day = sprintf("%02d", $dateMatch['day']);
+        } else {
+            $bot->sendMessage('Wrong format');
+            $this->askMonthDayDeadline($bot);
+            return;
+        }
+
+        if (!checkdate($month, $day, (new \DateTime())->format('Y'))) {
+            $bot->sendMessage('Wrong date');
+            $this->askMonthDayDeadline($bot);
+            return;
+        }
+
+        $this->dateTime['month'] = $month;
+        $this->dateTime['day'] = $day;
+        $this->askHourMinuteDeadline($bot);
     }
 
     /**
@@ -47,16 +99,28 @@ class CreateTaskConversation extends Conversation
      */
     public function askHourMinuteDeadline(Nutgram $bot): void
     {
-        $answer = array_map(
-            static fn($value) => $value < 10 ? sprintf("%02d", $value) : $value,
-            explode(' ', trim(htmlspecialchars($bot->message()->text)))
-        );
-        $this->dateTime = array_combine(
-            ['month', 'day'],
-            $answer
-        );
         $bot->sendMessage('Set deadline(Format: hour minute)');
-        $this->next('recap');
+        $this->next('checkHourMinuteDeadline');
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    public function checkHourMinuteDeadline(Nutgram $bot): void
+    {
+        $answer = trim(htmlspecialchars($bot->message()->text));
+
+        if (preg_match('!^(?<hour>([01]\d|2[0-3])) (?<minute>[0-5]\d)$!iu', $answer, $timeMatch)) {
+            $hour = sprintf("%02d", $timeMatch['hour']);
+            $minute = sprintf("%02d", $timeMatch['minute']);
+        } else {
+            $bot->sendMessage('Wrong time');
+            $this->askMonthDayDeadline($bot);
+            return;
+        }
+        $this->dateTime['hour'] = $hour;
+        $this->dateTime['minute'] = $minute;
+        $this->recap($bot);
     }
 
     /**
@@ -65,16 +129,7 @@ class CreateTaskConversation extends Conversation
      */
     public function recap(Nutgram $bot): void
     {
-        $answer = array_map(
-            static fn($value) => $value < 10 ? sprintf("%02d", $value) : $value,
-            explode(' ', trim(htmlspecialchars($bot->message()->text)))
-        );
-        $time = array_combine(
-            ['hour', 'minute'],
-            $answer
-        );
-        $dataTime = array_merge($this->dateTime, $time);
-        $formattedDataTime = (new \DateTime())->format('Y') . '-' . $dataTime['month'] . '-' . $dataTime['day'] . 'T' . $dataTime['hour'] . ':' . $dataTime['minute'];
+        $formattedDataTime = (new \DateTime())->format('Y') . '-' . $this->dateTime['month'] . '-' . $this->dateTime['day'] . 'T' . $this->dateTime['hour'] . ':' . $this->dateTime['minute'];
 
         $task = new Task();
         $task->setTitle($this->title);
@@ -84,7 +139,16 @@ class CreateTaskConversation extends Conversation
         $task->setStatus(false);
         $this->entityManager->persist($task);
         $this->entityManager->flush();
-        $bot->sendMessage(sprintf('Task "%s" has been created on the %s', $this->title, $formattedDataTime));
+        $bot->sendMessage(
+            text: sprintf('Task "%s" has been created on the %s', $this->title, $formattedDataTime),
+            reply_markup: ReplyKeyboardMarkup::make(
+                resize_keyboard: true,
+            )
+                ->addRow(
+                    KeyboardButton::make("\xF0\x9F\x95\x9B Create new task"),
+                    KeyboardButton::make("\xF0\x9F\x94\xA5 My tasks")
+                )
+        );
         $this->end();
     }
 }
