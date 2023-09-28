@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello TaskController!{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+{% endblock %}
+
+{% block body %}
+    <section id="calendar" class="calendar mt-5">
+        <h2 class="text-center my-5">{{ currentDate|format_datetime(locale='ua', timezone='Europe/Warsaw') }}</h2>
+        <div class="container">
+            <div class="table-responsive">
+                <table class="table table-bordered text-center">
+                    <thead>
+                    <tr class="bg-light-gray">
+                        <th class="text-uppercase">Time
+                        </th>
+                        {% for day in weekDay %}
+                            <th class="text-uppercase">{{ day }}</th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for j in range(0,23) %}
+                        <tr>
+                            <th class="align-middle">{{ j|intToTime }}</th>
+                            {% set daysOfWeek = [] %}
+                            {% for i in 0..6 %}
+                                {% set day = firstDayOfWeek|date_modify('+'~i~' days') %}
+                                {% set daysOfWeek = daysOfWeek|merge([day]) %}
+                            {% endfor %}
+                            {% for day in daysOfWeek %}
+                                <td>
+                                    <span class="bg-sky padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">Dance</span>
+                                    <div class="margin-10px-top font-size14">9:00-10:00</div>
+                                    <div class="font-size13 text-light-gray">{{ day|date('Y-m-d') }}</div>
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+{% endblock %}
