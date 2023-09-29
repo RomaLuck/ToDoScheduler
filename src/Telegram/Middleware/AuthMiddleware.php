@@ -4,6 +4,8 @@ namespace App\Telegram\Middleware;
 
 use App\Repository\UserRepository;
 use SergiX44\Nutgram\Nutgram;
+use SergiX44\Nutgram\Telegram\Types\Keyboard\InlineKeyboardButton;
+use SergiX44\Nutgram\Telegram\Types\Keyboard\InlineKeyboardMarkup;
 
 class AuthMiddleware
 {
@@ -16,8 +18,15 @@ class AuthMiddleware
      */
     public function __invoke(Nutgram $bot, $next): void
     {
-        if (!in_array($bot->chatId(), array_map(static fn($user) => $user->getChatId(), $this->repository->findAll()))) {
-            throw new \Exception('Register, please');
+        if ($this->repository->findOneBy(['chat_id' => $bot->chatId()]) === null) {
+            $bot->sendMessage(
+                text: 'Register, please!',
+                reply_markup: InlineKeyboardMarkup::make()
+                    ->addRow(
+                        InlineKeyboardButton::make('Register', callback_data: 'register')
+                    )
+            );
+            return;
         }
         $next($bot);
     }

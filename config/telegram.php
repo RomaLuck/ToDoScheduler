@@ -8,9 +8,9 @@ use App\Telegram\Conversations\CreateTaskConversation;
 use App\Telegram\Conversations\RegistrationConversation;
 use App\Telegram\Handlers\DeleteUserHandler;
 use App\Telegram\Handlers\DisplayTasksHandler;
+use App\Telegram\Handlers\ExceptionHandler;
 use App\Telegram\Handlers\InfoHandler;
 use App\Telegram\Middleware\AuthMiddleware;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use SergiX44\Nutgram\Conversations\Conversation;
 use SergiX44\Nutgram\Nutgram;
 
@@ -28,15 +28,9 @@ $bot->group(function (Nutgram $bot) {
     $bot->onCallbackQueryData('delete_user', DeleteUserHandler::class);
 })->middleware(AuthMiddleware::class);
 
+$bot->onException(ExceptionHandler::class);
+
 $bot->fallback(function (Nutgram $bot) {
     $bot->sendMessage('Sorry, I don\'t understand.');
 });
 
-$bot->onException(UniqueConstraintViolationException::class, function (Nutgram $bot, UniqueConstraintViolationException $exception) {
-    $bot->sendMessage('Such email already exists. Try again, please');
-});
-
-$bot->onException(function (Nutgram $bot, \Throwable $exception) {
-    error_log($exception);
-    $bot->sendMessage('Whoops! ' . $exception->getMessage());
-});

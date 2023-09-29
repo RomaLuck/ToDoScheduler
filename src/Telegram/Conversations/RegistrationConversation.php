@@ -23,29 +23,25 @@ class RegistrationConversation extends Conversation
     {
     }
 
-
     /**
      * @throws InvalidArgumentException
      * @throws \Exception
      */
     public function askEmail(Nutgram $bot): void
     {
-        if (!in_array(
-            $bot->chatId(),
-            array_map(static fn($user) => $user->getChatId(), $this->entityManager->getRepository(User::class)->findAll())
-        )) {
-            $bot->sendMessage(
-                text: 'Enter your email',
-                reply_markup: ReplyKeyboardMarkup::make(
-                    resize_keyboard: true,
-                    one_time_keyboard: true,
-                )
-                    ->addRow(KeyboardButton::make('Exit'))
-            );
-            $this->next('checkEmail');
-        } else {
-            throw new \Exception('User has been already registered');
+        if ($this->entityManager->getRepository(User::class)->findOneBy(['chat_id' => $bot->chatId()]) !== null) {
+            $bot->sendMessage('User has been already registered');
+            return;
         }
+        $bot->sendMessage(
+            text: 'Enter your email',
+            reply_markup: ReplyKeyboardMarkup::make(
+                resize_keyboard: true,
+                one_time_keyboard: true,
+            )
+                ->addRow(KeyboardButton::make('Exit'))
+        );
+        $this->next('checkEmail');
     }
 
     /**
@@ -54,15 +50,22 @@ class RegistrationConversation extends Conversation
     public function checkEmail(Nutgram $bot): void
     {
         $text = $bot->message()->text ?? '';
-        if (false !== stripos($text, "Exit")) {
-            $this->end();
-        } elseif (preg_match('!^[\w\-.]+@([\w\-]+.)+[\w\-]{2,4}$!iu', $text, $validatedEmail)) {
-            $this->email = $validatedEmail[0];
-            $bot->sendMessage('Enter your password');
-            $this->next('checkPassword');
-        } else {
-            $bot->sendMessage('Email is invalid');
-            $this->askEmail($bot);
+        switch (true) {
+            case false !== stripos($text, "Exit"):
+                $this->end();
+                break;
+            case !preg_match('!^[\w\-.]+@([\w\-]+.)+[\w\-]{2,4}$!iu', $text, $validatedEmail):
+                $bot->sendMessage('Email is invalid');
+                $this->askEmail($bot);
+                break;
+            case $this->entityManager->getRepository(User::class)->findOneBy(['email' => $validatedEmail[0]]) !== null:
+                $bot->sendMessage('Such email already exists. Try again, please');
+                $this->askEmail($bot);
+                break;
+            default:
+                $this->email = $validatedEmail[0];
+                $bot->sendMessage('Enter your password');
+                $this->next('checkPassword');
         }
     }
 
