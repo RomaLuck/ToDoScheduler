@@ -3,6 +3,7 @@ framework:
         chatter_transports:
             telegram: '%env(TELEGRAM_DSN)%'
         texter_transports:
+            sendgrid: '%env(MAILER_DSN)%'
         channel_policy:
             # use chat/slack, chat/telegram, sms/twilio or sms/nexmo
             urgent: ['email']

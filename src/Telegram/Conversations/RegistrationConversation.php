@@ -3,12 +3,18 @@
 namespace App\Telegram\Conversations;
 
 use App\Entity\User;
+use App\Event\RegistrationEvent;
+use App\EventSubscriber\RegistrationSubscriber;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\Log\LoggerInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 use SergiX44\Nutgram\Conversations\Conversation;
 use SergiX44\Nutgram\Nutgram;
 use SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton;
 use SergiX44\Nutgram\Telegram\Types\Keyboard\ReplyKeyboardMarkup;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class RegistrationConversation extends Conversation
@@ -18,7 +24,9 @@ class RegistrationConversation extends Conversation
 
     public function __construct(
         private readonly UserPasswordHasherInterface $userPasswordHasher,
-        private readonly EntityManagerInterface      $entityManager
+        private readonly EntityManagerInterface      $entityManager,
+        private readonly MailerInterface             $mailer,
+        private readonly EventDispatcherInterface    $dispatcher,
     )
     {
     }
@@ -92,6 +100,9 @@ class RegistrationConversation extends Conversation
                     KeyboardButton::make("\xF0\x9F\x94\xA5 My tasks")
                 )
         );
+        $event = new RegistrationEvent($this->email);
+        $this->dispatcher->dispatch($event, RegistrationEvent::NAME);
+        $this->dispatcher->addSubscriber(new RegistrationSubscriber($this->mailer));
         $this->end();
     }
 }
