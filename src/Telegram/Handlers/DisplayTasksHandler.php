@@ -7,7 +7,6 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use SergiX44\Nutgram\Nutgram;
 use SergiX44\Nutgram\Telegram\Properties\ParseMode;
-use SergiX44\Nutgram\Telegram\Types\Message\Message;
 
 class DisplayTasksHandler
 {
@@ -27,7 +26,9 @@ class DisplayTasksHandler
         if (count($uncompletedTasks) > 0) {
             foreach ($uncompletedTasks as $uncompletedTask) {
                 $bot->sendMessage(
-                    text: "\xE2\x9E\xA1 " . $uncompletedTask->getTitle(),
+                    text: $uncompletedTask->getDeadLine() ?
+                        "\xE2\x9E\xA1 " . $uncompletedTask->getDeadLine()?->format('Y-m-d H:i:s') . ' - ' . $uncompletedTask->getTitle() :
+                        "\xE2\x9E\xA1 " . $uncompletedTask->getTitle()
                 );
             }
         } else {

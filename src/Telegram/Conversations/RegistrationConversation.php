@@ -5,15 +5,14 @@ namespace App\Telegram\Conversations;
 use App\Entity\User;
 use App\Event\RegistrationEvent;
 use App\EventSubscriber\RegistrationSubscriber;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\Log\LoggerInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 use SergiX44\Nutgram\Conversations\Conversation;
 use SergiX44\Nutgram\Nutgram;
 use SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton;
 use SergiX44\Nutgram\Telegram\Types\Keyboard\ReplyKeyboardMarkup;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -25,6 +24,7 @@ class RegistrationConversation extends Conversation
     public function __construct(
         private readonly UserPasswordHasherInterface $userPasswordHasher,
         private readonly EntityManagerInterface      $entityManager,
+        private readonly UserRepository              $userRepository,
         private readonly MailerInterface             $mailer,
         private readonly EventDispatcherInterface    $dispatcher,
     )
@@ -37,7 +37,7 @@ class RegistrationConversation extends Conversation
      */
     public function askEmail(Nutgram $bot): void
     {
-        if ($this->entityManager->getRepository(User::class)->findOneBy(['chat_id' => $bot->chatId()]) !== null) {
+        if ($this->userRepository->findOneBy(['chat_id' => $bot->chatId()]) !== null) {
             $bot->sendMessage('User has been already registered');
             return;
         }
@@ -66,9 +66,18 @@ class RegistrationConversation extends Conversation
                 $bot->sendMessage('Email is invalid');
                 $this->askEmail($bot);
                 break;
-            case $this->entityManager->getRepository(User::class)->findOneBy(['email' => $validatedEmail[0]]) !== null:
+            case $this->userRepository->findOneBy(['email' => $validatedEmail[0]]) !== null &&
+                $this->userRepository->findOneBy(['chat_id' => $bot->chatId()]) !== null:
                 $bot->sendMessage('Such email already exists. Try again, please');
                 $this->askEmail($bot);
+                break;
+            case $this->userRepository->findOneBy(['email' => $validatedEmail[0]]) !== null &&
+                $this->userRepository->findOneBy(['chat_id' => $bot->chatId()]) === null:
+                $user = $this->userRepository->findOneBy(['email' => $validatedEmail[0]]);
+                $user->setChatId($bot->chatId());
+                $this->entityManager->flush();
+                $bot->sendMessage('User settings updated');
+                $this->last($bot);
                 break;
             default:
                 $this->email = $validatedEmail[0];
@@ -90,6 +99,17 @@ class RegistrationConversation extends Conversation
         $user->setChatId((string)$bot->chatId());
         $this->entityManager->persist($user);
         $this->entityManager->flush();
+        $event = new RegistrationEvent($this->email);
+        $this->dispatcher->dispatch($event, RegistrationEvent::NAME);
+        $this->dispatcher->addSubscriber(new RegistrationSubscriber($this->mailer));
+        $this->last($bot);
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    public function last(Nutgram $bot): void
+    {
         $bot->sendMessage(
             text: "User has been registered successfully \xF0\x9F\x8E\x89",
             reply_markup: ReplyKeyboardMarkup::make(
@@ -100,9 +120,6 @@ class RegistrationConversation extends Conversation
                     KeyboardButton::make("\xF0\x9F\x94\xA5 My tasks")
                 )
         );
-        $event = new RegistrationEvent($this->email);
-        $this->dispatcher->dispatch($event, RegistrationEvent::NAME);
-        $this->dispatcher->addSubscriber(new RegistrationSubscriber($this->mailer));
         $this->end();
     }
 }

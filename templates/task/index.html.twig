@@ -5,14 +5,25 @@
 {% block body %}
     <section class="vh-100">
         <div class="container py-5 h-100">
+            <div class="row justify-content-center">
+                <div class="col-md-5">
+                    {% for label, messages in app.flashes %}
+                        {% for message in messages %}
+                            <div class="bg-{{ label }} text-white text-center fw-bold rounded py-2">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col">
-                    <div class="card" id="list1" style="border-radius: .75rem; background-color: #eff1f2;">
+                    <div class="card" id="list1" style="border-radius: .75rem; background-color: mediumseagreen;">
                         <div class="card-body py-4 px-4 px-md-5">
 
                             <p class="h1 text-center mt-3 mb-4 pb-3 fw-bold">
                                 <i class="fas fa-check-square me-1"></i>
-                                <span>My ToDo</span>
+                                <span class="text-white">My ToDo</span>
                             </p>
                             <form action="{{ path('create_task') }}" method="post">
                                 <div class="pb-2">
@@ -60,7 +71,7 @@
                             {% for task in tasks %}
                                 <ul class="list-group list-group-horizontal rounded-sm border my-2 shadow-sm">
                                     <li
-                                            class="list-group-item d-flex align-items-center ps-2 pe-3 py-1 rounded-0 border-0 bg-transparent">
+                                            class="list-group-item d-flex align-items-center ps-2 pe-3 py-1 rounded-0 border-0 .bg-light.bg-gradient">
                                         <div class="form-check">
                                             <input class="form-check-input me-0 border-secondary" type="checkbox"
                                                    name="checkbox"
@@ -74,13 +85,13 @@
                                         </div>
                                     </li>
                                     <li
-                                            class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent">
+                                            class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 .bg-light.bg-gradient">
                                         <a class="text-decoration-none text-dark"
                                            href="{{ path('switch_status',{'id':task.id}) }}">
-                                            <p class="{% if task.status %} text-decoration-line-through text-secondary {% endif %} lead fw-normal mb-0">{{ task.title }}</p>
+                                            <p class="{% if task.status %} text-decoration-line-through text-secondary {% endif %} fw-bold lead fw-normal mb-0">{{ task.title }}</p>
                                         </a>
                                     </li>
-                                    <li class="list-group-item px-3 py-1 d-flex align-items-center border-0 bg-transparent">
+                                    <li class="list-group-item px-3 py-1 d-flex align-items-center border-0 .bg-light.bg-gradient">
                                         {% if task.deadLine %}
                                             <div
                                                     class="py-2 px-3 me-2 border border-warning rounded-3 d-flex align-items-center bg-light">
@@ -94,16 +105,18 @@
                                             </div>
                                         {% endif %}
                                     </li>
-                                    <li class="list-group-item px-3 py-1 rounded-0 border-0 bg-transparent">
+                                    <li class="list-group-item px-3 py-1 rounded-0 border-0 .bg-light.bg-gradient">
                                         <div class="text-end text-muted mx-2 mt-3">
                                             <p class="small mb-0">{{ task.createdAt|format_datetime() }}
                                             </p>
                                         </div>
                                     </li>
-                                    <li class="list-group-item mx-2 my-2 rounded border-1 bg-transparent">
+                                    <li class="list-group-item mx-2 my-2 rounded border-1 .bg-light.bg-gradient">
                                         <a onclick="return confirm('Are you sure to delete?')"
                                            href="{{ path('delete_task',{'id': task.id}) }}"
-                                           class="text-decoration-none fw-bold text-danger">X</a>
+                                           class="text-decoration-none fw-bold text-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
                                     </li>
                                 </ul>
                             {% endfor %}

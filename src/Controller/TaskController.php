@@ -18,10 +18,13 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class TaskController extends AbstractController
 {
     #[Route('/', name: 'app_task')]
-    public function index(TaskRepository $repository): Response
+    public function index(TaskRepository $taskRepository): Response
     {
         return $this->render('task/index.html.twig', [
-            'tasks' => $repository->findBy([], ['status' => 'ASC', 'createdAt' => 'DESC']),
+            'tasks' => $taskRepository->findBy(
+                ['user' => $this->getUser()],
+                ['status' => 'ASC', 'createdAt' => 'DESC']
+            ),
         ]);
     }
 
@@ -34,12 +37,12 @@ class TaskController extends AbstractController
         $task = new Task();
         $title = trim(htmlspecialchars($request->request->get('title')));
         if (empty($title)) {
-            $this->addFlash('danger','Task is empty');
+            $this->addFlash('danger', 'Task is empty');
             return $this->redirectToRoute('app_task');
         }
         $user = $entityManager->getRepository(User::class)->find($this->getUser());
         if ($user === null) {
-            $this->addFlash('danger','User is not authorized');
+            $this->addFlash('danger', 'User is not authorized');
             return $this->redirectToRoute('app_task');
         }
         $deadline = $request->request->get('deadline');

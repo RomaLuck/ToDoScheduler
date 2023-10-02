@@ -3,15 +3,15 @@
 namespace App\EventSubscriber;
 
 use App\Event\RegistrationEvent;
+use Symfony\Bridge\Twig\Mime\NotificationEmail;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 
 class RegistrationSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private readonly MailerInterface                     $mailer,
+        private readonly MailerInterface $mailer,
     )
     {
     }
@@ -21,10 +21,12 @@ class RegistrationSubscriber implements EventSubscriberInterface
      */
     public function onRegistrationEvent(RegistrationEvent $event): void
     {
-        $email = (new Email())
+        $email = (new NotificationEmail())
             ->to($event->getEmail())
             ->subject('Successfully registration')
-            ->text('Thank you for registration! Check out our web site "here is website"');
+            ->htmlTemplate('emails/comment_notification.html.twig')
+            ->action('Check out our website', 'https://www.keeplaughingforever.com/chuck-norris-jokes')
+            ->content('Thank you for registration! I am happy to see you!');
         $this->mailer->send($email);
     }
 
