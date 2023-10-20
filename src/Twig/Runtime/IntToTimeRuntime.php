@@ -15,4 +15,10 @@ class IntToTimeRuntime implements RuntimeExtensionInterface
     {
         return sprintf("%02d", $value) . ':00';
     }
+
+    public function hourFilter($time): int
+    {
+        $result = preg_match('!(\d+):!u', $time, $timeMatch);
+        return (int)$timeMatch[0];
+    }
 }

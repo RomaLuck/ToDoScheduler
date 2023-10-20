@@ -9,15 +9,19 @@
 
 {% block body %}
     <section id="calendar" class="calendar mt-5">
-        <h2 class="text-center my-5">{{ currentDate|format_datetime(locale='ua', timezone='Europe/Warsaw') }}</h2>
+        <div class="week-info">
+            <p><a href="{{ path('previous_week',{'week':week}) }}">Previous</a></p>
+            <p>Current week: {{ week }}</p>
+            <p><a href="{{ path('next_week',{'week':week}) }}">Next</a></p>
+        </div>
         <div class="container">
             <div class="table-responsive">
                 <table class="table table-bordered text-center">
                     <thead>
                     <tr class="bg-light-gray">
-                        <th class="text-uppercase">Time
+                        <th class="text-uppercase">Time\Day
                         </th>
-                        {% for day in weekDay %}
+                        {% for day in weekDays %}
                             <th class="text-uppercase">{{ day }}</th>
                         {% endfor %}
                     </tr>
@@ -33,9 +37,14 @@
                             {% endfor %}
                             {% for day in daysOfWeek %}
                                 <td>
-                                    <span class="bg-sky padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">Dance</span>
-                                    <div class="margin-10px-top font-size14">9:00-10:00</div>
-                                    <div class="font-size13 text-light-gray">{{ day|date('Y-m-d') }}</div>
+                                    {% for task in weekTasks %}
+                                        {% if task.deadLine|format_datetime('none', 'short', locale='pl')|hourFilter == j
+                                            and task.deadLine|date('Y-m-d') == day|date('Y-m-d') %}
+                                            <span class="bg-sky padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">{{ task.title }}</span>
+                                        {% endif %}
+                                    {% endfor %}
+{#                                    <div class="margin-10px-top font-size14">{{ j|intToTime }}</div>#}
+{#                                    <div class="font-size13 text-light-gray">{{ day|date('Y-m-d') }}</div>#}
                                 </td>
                             {% endfor %}
                         </tr>

@@ -16,6 +16,7 @@ class IntToTimeExtension extends AbstractExtension
             // parameter: ['is_safe' => ['html']]
             // Reference: https://twig.symfony.com/doc/3.x/advanced.html#automatic-escaping
             new TwigFilter('intToTime', [IntToTimeRuntime::class, 'formatIntToTime']),
+            new TwigFilter('hourFilter', [IntToTimeRuntime::class, 'hourFilter']),
         ];
     }
 
