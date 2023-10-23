@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html>
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Welcome!{% endblock %}</title>
@@ -8,40 +7,38 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
               integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
               crossorigin="anonymous">
-    {% endblock %}
-
-    {% block javascripts %}
-
+        <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     {% endblock %}
 </head>
 <body>
-<section class="nav_bar pb-5" id="nav-bar">
-    <div class="container">
-        <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm fixed-top">
-            <div class="container-lg">
-                <a class="navbar-brand text-danger fw-bold fs-4" href="#">ToDoList</a>
-                <div class="dropdown">
-                    <button class="btn btn-danger px-3" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                        <i class="bi bi-menu-up"></i>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href={{ path('app_task') }}>Tasks</a></li>
-                        <li><a class="dropdown-item" href="{{ path('app_calendar') }}">Calendar</a></li>
-                        <li><a class="dropdown-item" href="{{ path('app_logout') }}">Log out</a></li>
-                    </ul>
-                </div>
+<section class="nav_bar mb-5" id="nav-bar">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm fixed-top">
+        <div class="container">
+            <a class="navbar-brand text-danger fw-bold fs-4" href="#">ToDoList</a>
+            <div class="dropdown">
+                <button class="btn btn-danger px-3" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                    <i class="bi bi-menu-up"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href={{ path('app_task') }}>Tasks</a></li>
+                    <li><a class="dropdown-item" href="{{ path('app_week') }}">Weeks Calendar</a></li>
+                    <li><a class="dropdown-item" href="{{ path('app_month') }}">Month Calendar</a></li>
+                    <li><a class="dropdown-item" href="{{ path('app_logout') }}">Log out</a></li>
+                </ul>
             </div>
-        </nav>
-    </div>
+        </div>
+    </nav>
 </section>
 {% block body %}{% endblock %}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
-        crossorigin="anonymous"></script>
-<script
-        src="https://code.jquery.com/jquery-3.7.0.min.js"
-        integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
-        crossorigin="anonymous"></script>
+
+{% block javascripts %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+            crossorigin="anonymous"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+            crossorigin="anonymous"></script>
+{% endblock %}
 </body>
-</html>

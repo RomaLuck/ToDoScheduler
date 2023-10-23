@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Month{% endblock %}
+
+{% block body %}
+    <section id="month-calendar" class="month-calendar calendar py-4">
+        <div class="container">
+            <div class="table-responsive">
+                <table class="table table-bordered text-center">
+                    <thead>
+                    <tr class="bg-light-gray">
+                        {% for day in weekDays %}
+                            <th class="text-uppercase">{{ day }}</th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for dataTimeDays in dataTimeDayList %}
+                        <tr>
+                            {% for dataTimeDay in dataTimeDays %}
+                                <td class="{% if dataTimeDay|date('m')==month %}bg-light-green{% endif %}">
+                                    <div class="date row justify-content-center my-1">{{ dataTimeDay|date('d-m-Y') }}</div>
+                                    <div class="tasks row text-center">
+                                        <ul>
+                                            {% for task in monthTasks %}
+                                                {% if task.deadLine|date('d-m-Y')== dataTimeDay|date('d-m-Y') %}
+                                                    <li class="{{ random(['bg-primary','bg-secondary','bg-danger']) }} rounded px-2 py-1 text-white fw-bold">{{ task.title }}</li>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="week-info d-flex justify-content-center fixed-bottom">
+                <a class="btn btn-outline-primary m-3" href="{{ path('previous_month',{'month':month}) }}">Previous</a>
+                <p class="btn btn-outline-primary m-3">Current month: {{ month }}</p>
+                <a class="btn btn-outline-primary m-3" href="{{ path('next_month',{'month':month}) }}">Next</a>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

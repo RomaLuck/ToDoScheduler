@@ -1,19 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello TaskController!{% endblock %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-{% endblock %}
+{% block title %}Weeks{% endblock %}
 
 {% block body %}
-    <section id="calendar" class="calendar mt-5">
-        <div class="week-info">
-            <p><a href="{{ path('previous_week',{'week':week}) }}">Previous</a></p>
-            <p>Current week: {{ week }}</p>
-            <p><a href="{{ path('next_week',{'week':week}) }}">Next</a></p>
-        </div>
+    <section id="week-calendar" class="week-calendar calendar py-4">
         <div class="container">
             <div class="table-responsive">
                 <table class="table table-bordered text-center">
@@ -40,17 +30,22 @@
                                     {% for task in weekTasks %}
                                         {% if task.deadLine|format_datetime('none', 'short', locale='pl')|hourFilter == j
                                             and task.deadLine|date('Y-m-d') == day|date('Y-m-d') %}
-                                            <span class="bg-sky padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">{{ task.title }}</span>
+                                            <span class="{{ random(['bg-primary','bg-secondary','bg-danger']) }} rounded px-2 py-1 text-white fw-bold">{{ task.title }}</span>
                                         {% endif %}
                                     {% endfor %}
-{#                                    <div class="margin-10px-top font-size14">{{ j|intToTime }}</div>#}
-{#                                    <div class="font-size13 text-light-gray">{{ day|date('Y-m-d') }}</div>#}
+                                    {#                                    <div class="margin-10px-top font-size14">{{ j|intToTime }}</div> #}
+                                    {#                                    <div class="font-size13 text-light-gray">{{ day|date('Y-m-d') }}</div> #}
                                 </td>
                             {% endfor %}
                         </tr>
                     {% endfor %}
                     </tbody>
                 </table>
+            </div>
+            <div class="week-info d-flex justify-content-center fixed-bottom">
+                <a class="btn btn-outline-primary m-3" href="{{ path('previous_week',{'week':week}) }}">Previous</a>
+                <p class="btn btn-outline-primary m-3">Current week: {{ week }}</p>
+                <a class="btn btn-outline-primary m-3" href="{{ path('next_week',{'week':week}) }}">Next</a>
             </div>
         </div>
     </section>
