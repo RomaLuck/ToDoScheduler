@@ -37,6 +37,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?string $chat_id = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $time_zone = null;
+
     public function __construct()
     {
         $this->task = new ArrayCollection();
@@ -150,6 +153,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setChatId(string $chat_id): static
     {
         $this->chat_id = $chat_id;
+
+        return $this;
+    }
+
+    public function getTimeZone(): ?string
+    {
+        return $this->time_zone;
+    }
+
+    public function setTimeZone(?string $time_zone): static
+    {
+        $this->time_zone = $time_zone;
 
         return $this;
     }

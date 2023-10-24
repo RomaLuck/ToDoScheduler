@@ -21,13 +21,13 @@ class RegistrationController extends AbstractController
 {
     #[Route('/register', name: 'app_register')]
     public function register(
-        EventDispatcherInterface $dispatcher,
-        MailerInterface $mailer,
-        Request $request,
+        EventDispatcherInterface    $dispatcher,
+        MailerInterface             $mailer,
+        Request                     $request,
         UserPasswordHasherInterface $userPasswordHasher,
-        UserAuthenticatorInterface $userAuthenticator,
-        AppCustomAuthenticator $authenticator,
-        EntityManagerInterface $entityManager
+        UserAuthenticatorInterface  $userAuthenticator,
+        AppCustomAuthenticator      $authenticator,
+        EntityManagerInterface      $entityManager
     ): Response
     {
         $user = new User();
@@ -42,13 +42,14 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             )
-            ->setRoles(['ROLE_USER']);
+                ->setRoles(['ROLE_USER'])
+                ->setTimeZone($request->getSession()->get('timeZone'));
 
             $entityManager->persist($user);
             $entityManager->flush();
             // do anything else you need here, like send an email
             $event = new RegistrationEvent($form->get('email')->getData());
-            $dispatcher->dispatch($event,RegistrationEvent::NAME);
+            $dispatcher->dispatch($event, RegistrationEvent::NAME);
             $dispatcher->addSubscriber(new RegistrationSubscriber($mailer));
 
             return $userAuthenticator->authenticateUser(
@@ -61,5 +62,14 @@ class RegistrationController extends AbstractController
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
+    }
+
+    #[Route('/save-location', name: 'app_time_zone')]
+    public function saveLocation(Request $request): Response
+    {
+        $session = $request->getSession();
+        $timeZone = $request->request->get('timeZone');
+        $session->set('timeZone', $timeZone);
+        return $this->redirectToRoute('app_register');
     }
 }

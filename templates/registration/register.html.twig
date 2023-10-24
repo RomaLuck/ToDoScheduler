@@ -24,3 +24,16 @@
         </div>
     </section>
 {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $('#registration_form_agreeTerms').on('click', function () {
+            const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            $.ajax({
+                type: 'POST',
+                url: '{{ path('app_time_zone') }}',
+                data: {timeZone: userTimeZone},
+            });
+        });
+    </script>
+{% endblock %}
