@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello TaskController!{% endblock %}
+{% block title %}ToDoList{% endblock %}
 
 {% block body %}
     <section class="vh-100">
@@ -29,18 +29,20 @@
                                 <div class="pb-2">
                                     <div class="card">
                                         <div class="card-body">
-                                            <div class="row d-flex flex-row align-items-center f-wrap">
-                                                <div class="col-lg-7 m-1">
+                                            <div class="row align-items-center justify-content-between">
+                                                <div class="col-md-6 my-sm-2">
                                                     <input name="title" type="text" class="form-control form-control-lg"
                                                            id="exampleFormControlInput1"
                                                            placeholder="Add new...">
                                                 </div>
-                                                <div class="col-lg-3 m-1">
+                                                <div class="col-md-4 my-sm-2">
                                                     <input type="datetime-local" class="form-control form-control-lg"
                                                            name="deadline">
                                                 </div>
-                                                <div class="col-lg-1 m-1">
-                                                    <button type="submit" class="btn btn-primary px-5">Add</button>
+                                                <div class="col-md-2 my-sm-2">
+                                                    <button type="submit"
+                                                            class="btn btn-lg btn-outline-primary px-lg-5 px-md-3">Add
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -69,9 +71,9 @@
 
 
                             {% for task in tasks %}
-                                <ul class="list-group list-group-horizontal rounded-sm border my-2 shadow-sm">
+                                <ul class="list-group list-group-horizontal rounded-sm border my-2 shadow-sm bg-light d-block d-md-flex align-items-center">
                                     <li
-                                            class="list-group-item d-flex align-items-center ps-2 pe-3 py-1 rounded-0 border-0 .bg-light.bg-gradient">
+                                            class="list-group-item d-flex align-items-center rounded-0 border-0">
                                         <div class="form-check">
                                             <input class="form-check-input me-0 border-secondary" type="checkbox"
                                                    name="checkbox"
@@ -85,19 +87,19 @@
                                         </div>
                                     </li>
                                     <li
-                                            class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 .bg-light.bg-gradient">
+                                            class="list-group-item d-flex align-items-center flex-grow-1 border-0">
                                         <a class="text-decoration-none text-dark"
                                            href="{{ path('switch_status',{'id':task.id}) }}">
                                             <p class="{% if task.status %} text-decoration-line-through text-secondary {% endif %} fw-bold lead fw-normal mb-0">{{ task.title }}</p>
                                         </a>
                                     </li>
-                                    <li class="list-group-item px-3 py-1 d-flex align-items-center border-0 .bg-light.bg-gradient">
+                                    <li class="list-group-item d-flex align-items-center border-0">
                                         {% if task.deadLine %}
                                             <div
-                                                    class="py-2 px-3 me-2 border border-warning rounded-3 d-flex align-items-center bg-light">
+                                                    class="py-2 px-3 border border-warning rounded-3 d-flex align-items-center">
                                                 <p class="small mb-0">
                                                     <a href="#!" data-mdb-toggle="tooltip" title="Due on date">
-                                                        <i class="fas fa-hourglass-half me-2 text-warning"></i>
+                                                        <i class="fas fa-hourglass-half text-warning"></i>
                                                     </a>
 
                                                     {{ task.deadLine|format_datetime }}
@@ -111,13 +113,12 @@
                                             </p>
                                         </div>
                                     </li>
-                                    <li class="list-group-item mx-2 my-2 rounded border-1 .bg-light.bg-gradient">
-                                        <a onclick="return confirm('Are you sure to delete?')"
-                                           href="{{ path('delete_task',{'id': task.id}) }}"
-                                           class="text-decoration-none fw-bold text-danger">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
-                                    </li>
+                                    <a onclick="return confirm('Are you sure to delete?')"
+                                       href="{{ path('delete_task',{'id': task.id}) }}">
+                                        <li class="list-group-item mx-2 my-2 rounded border-1 .bg-light.bg-gradient">
+                                            <i class="bi bi-trash text-danger"></i>
+                                        </li>
+                                    </a>
                                 </ul>
                             {% endfor %}
                         </div>

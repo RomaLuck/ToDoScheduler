@@ -72,7 +72,7 @@ class Task
     #[ORM\PrePersist]
     public function setCreatedAt(): static
     {
-        $this->createdAt = new DateTimeImmutable('now',new DateTimeZone('Europe/Warsaw'));
+        $this->createdAt = new DateTimeImmutable('now', new DateTimeZone($this->user->getTimeZone()));
 
         return $this;
     }
