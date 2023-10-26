@@ -17,14 +17,22 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_USER')]
 class TaskController extends AbstractController
 {
-    #[Route('/', name: 'app_task')]
-    public function index(TaskRepository $taskRepository): Response
+    #[Route('/', name: 'app_task',methods: ['GET'])]
+    public function index(TaskRepository $taskRepository, Request $request): Response
     {
-        return $this->render('task/index.html.twig', [
-            'tasks' => $taskRepository->findBy(
+        $sort = $request->query->get('sortBy') ?? 'createdAt';
+
+        $result = match ($request->query->get('filter')) {
+            'Active' => $taskRepository->findUncompletedTasks($this->getUser()),
+            'Completed' => $taskRepository->findCompleted($this->getUser()),
+            'Has-due-date' => $taskRepository->findWithDeadLine($this->getUser()),
+            default => $taskRepository->findBy(
                 ['user' => $this->getUser()],
-                ['status' => 'ASC', 'createdAt' => 'DESC']
-            ),
+                ['status' => 'ASC', $sort => 'DESC']),
+        };
+
+        return $this->render('task/index.html.twig', [
+            'tasks' => $result
         ]);
     }
 

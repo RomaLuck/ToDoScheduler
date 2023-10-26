@@ -41,7 +41,7 @@
                                                 </div>
                                                 <div class="col-md-2 my-sm-2">
                                                     <button type="submit"
-                                                            class="btn btn-lg btn-outline-primary px-lg-5 px-md-3">Add
+                                                            class="btn btn-lg btn-outline-primary px-lg-4 px-md-3">Add
                                                     </button>
                                                 </div>
                                             </div>
@@ -51,57 +51,64 @@
                             </form>
 
                             <hr class="my-4">
-
-                            <div class="d-flex justify-content-end align-items-center mb-4 pt-2 pb-3">
-                                <p class="small mb-0 me-2 text-muted">Filter</p>
-                                <select class="select">
-                                    <option value="1">All</option>
-                                    <option value="2">Completed</option>
-                                    <option value="3">Active</option>
-                                    <option value="4">Has due date</option>
-                                </select>
-                                <p class="small mb-0 ms-4 me-2 text-muted">Sort</p>
-                                <select class="select">
-                                    <option value="1">Added date</option>
-                                    <option value="2">Due date</option>
-                                </select>
-                                <a href="#!" style="color: #23af89;" data-mdb-toggle="tooltip" title="Ascending"><i
-                                            class="fas fa-sort-amount-down-alt ms-2"></i></a>
+                            <div class="d-flex flex-row justify-content-end align-items-center pb-3">
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary small dropdown-toggle mx-1" type="button"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                        Filter
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{{ path('app_task',{'filter':'All'}) }}">All</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('app_task',{'filter':'Completed'}) }}">Completed</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('app_task',{'filter':'Active'}) }}">Active</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('app_task',{'filter':'Has-due-date'}) }}">Has due date</a></li>
+                                    </ul>
+                                </div>
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary small dropdown-toggle" type="button"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                        Sort by
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item"
+                                               href="{{ path('app_task',{'sortBy':'createdAt'}) }}">Added date</a></li>
+                                        <li><a class="dropdown-item"
+                                               href="{{ path('app_task',{'sortBy':'deadLine'}) }}">Due Date</a></li>
+                                    </ul>
+                                </div>
                             </div>
 
 
                             {% for task in tasks %}
-                                <ul class="list-group list-group-horizontal rounded-sm border my-2 shadow-sm bg-light d-block d-md-flex align-items-center">
-                                    <li
-                                            class="list-group-item d-flex align-items-center rounded-0 border-0">
-                                        <div class="form-check">
-                                            <input class="form-check-input me-0 border-secondary" type="checkbox"
-                                                   name="checkbox"
-                                                   value=""
-                                                   id="flexCheckChecked"
-                                                   aria-label="..."
-                                                    {% if task.status %}
-                                                        checked
-                                                    {% endif %}
-                                            />
-                                        </div>
-                                    </li>
-                                    <li
-                                            class="list-group-item d-flex align-items-center flex-grow-1 border-0">
-                                        <a class="text-decoration-none text-dark"
-                                           href="{{ path('switch_status',{'id':task.id}) }}">
+                                <ul class="list-group list-group-horizontal rounded-sm border my-2 shadow-sm bg-white d-block d-md-flex align-items-center justify-content-between">
+                                    <a class="text-decoration-none text-dark d-flex"
+                                       href="{{ path('switch_status',{'id':task.id}) }}">
+                                        <li
+                                                class="list-group-item d-flex align-items-center rounded-0 border-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input me-0 border-secondary" type="checkbox"
+                                                       name="checkbox"
+                                                       value=""
+                                                       id="flexCheckChecked"
+                                                       aria-label="..."
+                                                        {% if task.status %}
+                                                            checked
+                                                        {% endif %}
+                                                />
+                                            </div>
+                                        </li>
+                                        <li
+                                                class="list-group-item d-flex align-items-center flex-grow-1 border-0">
                                             <p class="{% if task.status %} text-decoration-line-through text-secondary {% endif %} fw-bold lead fw-normal mb-0">{{ task.title }}</p>
-                                        </a>
-                                    </li>
+
+                                        </li>
+                                    </a>
                                     <li class="list-group-item d-flex align-items-center border-0">
                                         {% if task.deadLine %}
                                             <div
                                                     class="py-2 px-3 border border-warning rounded-3 d-flex align-items-center">
-                                                <p class="small mb-0">
-                                                    <a href="#!" data-mdb-toggle="tooltip" title="Due on date">
-                                                        <i class="fas fa-hourglass-half text-warning"></i>
-                                                    </a>
-
+                                                <p class="dueDate small mb-0">
+                                                    Due date:
                                                     {{ task.deadLine|format_datetime }}
                                                 </p>
                                             </div>
@@ -109,7 +116,7 @@
                                     </li>
                                     <li class="list-group-item px-3 py-1 rounded-0 border-0 .bg-light.bg-gradient">
                                         <div class="text-end text-muted mx-2 mt-3">
-                                            <p class="small mb-0">{{ task.createdAt|format_datetime() }}
+                                            <p class="addedDate small mb-0">Added: {{ task.createdAt|format_datetime() }}
                                             </p>
                                         </div>
                                     </li>
