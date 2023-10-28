@@ -24,7 +24,8 @@
                                         <ul>
                                             {% for task in monthTasks %}
                                                 {% if task.deadLine|date('d-m-Y')== dataTimeDay|date('d-m-Y') %}
-                                                    <li class="{{ random(['bg-primary','bg-secondary','bg-danger']) }} rounded px-2 py-1 text-white fw-bold">{{ task.title }}</li>
+                                                    <li class="{{ random(['bg-primary','bg-secondary','bg-danger']) }} rounded px-2 py-1">
+                                                        <a class="text-white fw-bold text-decoration-none" href="{{ path('app_task') }}">{{ task.title }}</a></li>
                                                 {% endif %}
                                             {% endfor %}
                                         </ul>

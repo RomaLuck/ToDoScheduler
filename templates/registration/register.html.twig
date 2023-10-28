@@ -15,8 +15,32 @@
                     {{ form_row(registrationForm.plainPassword, {
                         label: 'Password'
                     }) }}
-                    {{ form_row(registrationForm.agreeTerms) }}
+                    <div class="d-flex">
+                        {{ form_row(registrationForm.agreeTerms) }}
+                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#termsModal">
+                            <span class="small">Agree terms</span>
+                        </button>
 
+                        <!-- Modal -->
+                        <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="termsModalLabel">Accept terms</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Some text
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary">Accept</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                     <button type="submit" class="btn btn-danger float-end">Register</button>
                     {{ form_end(registrationForm) }}
                 </div>
@@ -27,13 +51,15 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-        $('#registration_form_agreeTerms').on('click', function () {
-            const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            $.ajax({
-                type: 'POST',
-                url: '{{ path('app_time_zone') }}',
-                data: {timeZone: userTimeZone},
-            });
-        });
+        const agreeTerms = document.getElementById('registration_form_agreeTerms');
+        agreeTerms.addEventListener('click', function () {
+            let userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            let formData = new FormData();
+            formData.append('timeZone', userTimeZone);
+            fetch('{{ path('app_time_zone') }}', {
+                method: 'POST',
+                body: formData,
+            })
+        })
     </script>
 {% endblock %}

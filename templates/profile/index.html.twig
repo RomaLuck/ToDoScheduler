@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block body %}
+    <section class="profile py-5" id="profile">
+        <div class="container">
+            <form method="post">
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <img src="https://picsum.photos/id/237/200/300" alt="image" height="500px">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <div class="align-items-center">
+                            <div class="form-control mb-2">
+                                <label class="form-label" for="profile">Email</label>
+                                <input type="text" name="email" class="form-control" value="{{ user.email }}">
+                            </div>
+                            <div class="form-control mb-2">
+                                <label class="form-label" for="profile">Password</label>
+                                <input type="text" name="password" class="form-control">
+                            </div>
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                            <button class="btn btn-danger px-5 my-3" type="submit">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+{% endblock %}

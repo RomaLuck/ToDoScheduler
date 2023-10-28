@@ -9,7 +9,7 @@
                 <div class="col-md-5">
                     {% for label, messages in app.flashes %}
                         {% for message in messages %}
-                            <div class="bg-{{ label }} text-white text-center fw-bold rounded py-2">
+                            <div class="alert alert-{{ label }}" role="alert">
                                 {{ message }}
                             </div>
                         {% endfor %}

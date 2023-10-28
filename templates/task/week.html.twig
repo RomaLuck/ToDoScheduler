@@ -30,7 +30,8 @@
                                     {% for task in weekTasks %}
                                         {% if task.deadLine|format_datetime('none', 'short', locale='pl')|hourFilter == j
                                             and task.deadLine|date('Y-m-d') == day|date('Y-m-d') %}
-                                            <span class="{{ random(['bg-primary','bg-secondary','bg-danger']) }} rounded px-2 py-1 text-white fw-bold">{{ task.title }}</span>
+                                            <span class="{{ random(['bg-primary','bg-secondary','bg-danger']) }} rounded px-2 py-1">
+                                                <a class="text-white fw-bold text-decoration-none" href="{{ path('app_task') }}">{{ task.title }}</a></span>
                                         {% endif %}
                                     {% endfor %}
                                     {#                                    <div class="margin-10px-top font-size14">{{ j|intToTime }}</div> #}
