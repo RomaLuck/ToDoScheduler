@@ -5,7 +5,7 @@
 {% block body %}
     <section class="profile py-5" id="profile">
         <div class="container">
-            <form method="post">
+            <form method="post" action="{{ path('app_profile') }}">
                 <div class="row">
                     <div class="col-md-6 mb-2">
                         <img src="https://picsum.photos/id/237/200/300" alt="image" height="500px">
@@ -20,7 +20,20 @@
                                 <label class="form-label" for="profile">Password</label>
                                 <input type="text" name="password" class="form-control">
                             </div>
-                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                            <div class="form-control mb-2">
+                                <label for="profile">Country</label>
+                                <select id="countryId" name="countryId" class="form-control">
+                                    <option value="">Select your country</option>
+                                    {% for country in countryList %}
+                                        <option value="{{ country['Code'] }}">{{ country['Name'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-control mb-2">
+                                <label for="profile">Time zone</label>
+                                <select id="selectedTimezone" name="selectedTimezone" class="form-control"></select>
+                            </div>
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('update_user') }}">
                             <button class="btn btn-danger px-5 my-3" type="submit">Save</button>
                         </div>
                     </div>
@@ -28,4 +41,30 @@
             </form>
         </div>
     </section>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        let countrySelect = document.getElementById('countryId');
+        countrySelect.addEventListener('change', function () {
+            let selectedTimezone = document.getElementById("selectedTimezone");
+            let selectedOption = countrySelect.options[countrySelect.selectedIndex];
+            let countryCode = selectedOption.value;
+            let params = new URLSearchParams();
+            params.append('key', 'XSICU5DY1Z6H');
+            params.append('format', 'json');
+            params.append('country', countryCode);
+            fetch('https://api.timezonedb.com/v2.1/list-time-zone?' + params)
+                .then(response => response.json())
+                .then(data => {
+                    let zones = data.zones;
+                    zones.forEach(zone => {
+                        let option = document.createElement("option");
+                        option.value = zone.zoneName;
+                        option.textContent = zone.zoneName;
+                        selectedTimezone.appendChild(option);
+                    });
+                });
+        });
+    </script>
 {% endblock %}

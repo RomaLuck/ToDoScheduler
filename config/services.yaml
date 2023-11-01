@@ -28,3 +28,5 @@ services:
         public: true
         shared: false
         resource: '../src/Telegram'
+
+    App\Contracts\CacheInterface: '@App\Service\FilesCache'
