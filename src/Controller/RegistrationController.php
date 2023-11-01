@@ -43,7 +43,7 @@ class RegistrationController extends AbstractController
                 )
             )
                 ->setRoles(['ROLE_USER'])
-                ->setTimeZone($request->getSession()->get('timeZone'));
+                ->setTimeZone($request->request->get('time-zone'));
 
             $entityManager->persist($user);
             $entityManager->flush();
@@ -62,14 +62,5 @@ class RegistrationController extends AbstractController
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
-    }
-
-    #[Route('/save-location', name: 'app_time_zone')]
-    public function saveLocation(Request $request): Response
-    {
-        $session = $request->getSession();
-        $timeZone = $request->request->get('timeZone');
-        $session->set('timeZone', $timeZone);
-        return $this->redirectToRoute('app_register');
     }
 }

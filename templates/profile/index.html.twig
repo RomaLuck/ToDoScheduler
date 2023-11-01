@@ -60,7 +60,6 @@
                     let zones = data.zones;
                     zones.forEach(zone => {
                         let option = document.createElement("option");
-                        option.value = zone.zoneName;
                         option.textContent = zone.zoneName;
                         selectedTimezone.appendChild(option);
                     });

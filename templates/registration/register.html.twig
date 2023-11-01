@@ -22,25 +22,28 @@
                         </button>
 
                         <!-- Modal -->
-                        <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel"
+                             aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h1 class="modal-title fs-5" id="termsModalLabel">Accept terms</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
                                         Some text
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                        </button>
                                         <button type="button" class="btn btn-primary">Accept</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
+                    <input name="time-zone" id="time-zone" type="hidden">
                     <button type="submit" class="btn btn-danger float-end">Register</button>
                     {{ form_end(registrationForm) }}
                 </div>
@@ -54,12 +57,8 @@
         const agreeTerms = document.getElementById('registration_form_agreeTerms');
         agreeTerms.addEventListener('click', function () {
             let userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            let formData = new FormData();
-            formData.append('timeZone', userTimeZone);
-            fetch('{{ path('app_time_zone') }}', {
-                method: 'POST',
-                body: formData,
-            })
+            let timeZoneForm = document.getElementById('time-zone');
+            timeZoneForm.value = userTimeZone;
         })
     </script>
 {% endblock %}
