@@ -18,14 +18,15 @@
                     {% for dataTimeDays in dataTimeDayList %}
                         <tr>
                             {% for dataTimeDay in dataTimeDays %}
-                                <td class="{% if dataTimeDay|date('m')==month %}bg-light-green{% endif %}">
+                                <td class="{% if dataTimeDay|date('m') == month %}bg-light-green{% endif %} {% if dataTimeDay|date('d-m-Y') == currentDate|date('d-m-Y') %}border border-2 border-danger{% endif %}">
                                     <div class="date row justify-content-center my-1">{{ dataTimeDay|date('d-m-Y') }}</div>
                                     <div class="tasks row text-center">
                                         <ul>
                                             {% for task in monthTasks %}
                                                 {% if task.deadLine|date('d-m-Y')== dataTimeDay|date('d-m-Y') %}
                                                     <li class="{{ random(['bg-primary','bg-secondary','bg-danger']) }} rounded px-2 py-1">
-                                                        <a class="text-white fw-bold text-decoration-none" href="{{ path('app_task') }}">{{ task.title }}</a></li>
+                                                        <a class="text-white fw-bold text-decoration-none"
+                                                           href="{{ path('app_task') }}">{{ task.title }}</a></li>
                                                 {% endif %}
                                             {% endfor %}
                                         </ul>

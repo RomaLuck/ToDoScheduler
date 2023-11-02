@@ -11,8 +11,8 @@
                     <tr class="bg-light-gray">
                         <th class="text-uppercase">Time\Day
                         </th>
-                        {% for day in weekDays %}
-                            <th class="text-uppercase">{{ day }}</th>
+                        {% for day in daysOfWeek %}
+                            <th class="text-uppercase">{{ day|date('l') }}</th>
                         {% endfor %}
                     </tr>
                     </thead>
@@ -20,22 +20,18 @@
                     {% for j in range(0,23) %}
                         <tr>
                             <th class="align-middle">{{ j|intToTime }}</th>
-                            {% set daysOfWeek = [] %}
-                            {% for i in 0..6 %}
-                                {% set day = firstDayOfWeek|date_modify('+'~i~' days') %}
-                                {% set daysOfWeek = daysOfWeek|merge([day]) %}
-                            {% endfor %}
                             {% for day in daysOfWeek %}
-                                <td>
+                                <td class="{% if day|date('Y-m-d') == currentDate|date('Y-m-d') %}bg-light-green{% endif %}">
                                     {% for task in weekTasks %}
                                         {% if task.deadLine|format_datetime('none', 'short', locale='pl')|hourFilter == j
                                             and task.deadLine|date('Y-m-d') == day|date('Y-m-d') %}
                                             <span class="{{ random(['bg-primary','bg-secondary','bg-danger']) }} rounded px-2 py-1">
-                                                <a class="text-white fw-bold text-decoration-none" href="{{ path('app_task') }}">{{ task.title }}</a></span>
+                                                <a class="text-white fw-bold text-decoration-none"
+                                                   href="{{ path('app_task') }}">{{ task.title }}</a></span>
                                         {% endif %}
                                     {% endfor %}
                                     {#                                    <div class="margin-10px-top font-size14">{{ j|intToTime }}</div> #}
-                                    {#                                    <div class="font-size13 text-light-gray">{{ day|date('Y-m-d') }}</div> #}
+                                    {#                                                                        <div class="font-size13 text-light-gray">{{ day|date('Y-m-d') }}</div> #}
                                 </td>
                             {% endfor %}
                         </tr>
