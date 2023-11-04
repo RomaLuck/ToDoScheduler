@@ -6,9 +6,6 @@ use DateTimeImmutable;
 
 class CalendarService
 {
-    private $year;
-    private $month;
-    private $day;
     private DateTimeImmutable $dateTime;
 
     public function __construct()
@@ -24,44 +21,36 @@ class CalendarService
     /**
      * @throws \Exception
      */
-    public function getFirstDayOfCurrentYear(): DateTimeImmutable
+    private function getFirstDayOfCurrentYear(int $year): DateTimeImmutable
     {
-        return new DateTimeImmutable($this->getCurrentYear() . "-01-01");
+        return new DateTimeImmutable("$year-01-01");
     }
 
     /**
      * @throws \Exception
      */
-    public function getLastDayOfCurrentYear(): DateTimeImmutable
+    private function getFirstWeekOfMonthNumber(int $month, int $year): int
     {
-        return new DateTimeImmutable($this->getCurrentYear() . "-12-31");
+        return $this->getFirstDayOfMonth($month, $year)->format('W');
     }
 
     /**
      * @throws \Exception
      */
-    public function getFirstWeekOfMonthNumber(string $month): int
+    private function getLastWeekOfMonthNumber(int $month, int $year): int
     {
-        return $this->getFirstDayOfMonth($month)->format('W');
+        return $this->getLastDayOfMonth($month, $year)->format('W');
     }
 
     /**
      * @throws \Exception
      */
-    public function getLastWeekOfMonthNumber(string $month): int
-    {
-        return $this->getLastDayOfMonth($month)->format('W');
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public function getDataTimeDayList(string $month): array
+    public function getDataTimeDayList(int $month, $year): array
     {
         $dataTimeDayList = [];
-        $weekNumbers = range($this->getFirstWeekOfMonthNumber($month), $this->getLastWeekOfMonthNumber($month));
+        $weekNumbers = range($this->getFirstWeekOfMonthNumber($month, $year), $this->getLastWeekOfMonthNumber($month, $year));
         foreach ($weekNumbers as $weekNumber) {
-            $firstDayOfWeek = $this->getFirstDayOfCurrentYear()->modify('+' . ($weekNumber - 1) . ' weeks')->modify('+1 days');
+            $firstDayOfWeek = $this->getFirstDayOfCurrentYear($year)->modify('+' . ($weekNumber - 1) . ' weeks')->modify('+1 days');
             for ($i = 0; $i < 7; $i++) {
                 $dataTimeDayList[$weekNumber][] = $firstDayOfWeek->modify("+$i days");
             }
@@ -72,9 +61,9 @@ class CalendarService
     /**
      * @throws \Exception
      */
-    public function getFirstDayOfWeek($week): DateTimeImmutable
+    public function getFirstDayOfWeek(int $week, int $year): DateTimeImmutable
     {
-        return $this->getFirstDayOfCurrentYear()->modify('+' . ($week - 1) . ' weeks')
+        return $this->getFirstDayOfCurrentYear($year)->modify('+' . ($week - 1) . ' weeks')
             ->modify('+1 days');
     }
 
@@ -90,34 +79,34 @@ class CalendarService
     /**
      * @throws \Exception
      */
-    public function getFirstDayOfMonth(string $month): DateTimeImmutable
+    private function getFirstDayOfMonth(int $month, $year): DateTimeImmutable
     {
-        return new DateTimeImmutable($this->getCurrentYear() . "-$month-01");
+        return $this->getFirstDayOfCurrentYear($year)->modify('+' . ($month - 1) . ' month');
     }
 
     /**
      * @throws \Exception
      */
-    public function getLastDayOfMonth(string $month): DateTimeImmutable
+    private function getLastDayOfMonth(int $month, int $year): DateTimeImmutable
     {
-        return new DateTimeImmutable($this->getCurrentYear() . "-$month-" . $this->dateTime->format('t'));
+        $numDaysInMonth = (new DateTimeImmutable($this->getFirstDayOfMonth($month, $year)->format('Y-m-d')))->format('t');
+        return $this->getFirstDayOfMonth($month, $year)->modify('+' . (int)$numDaysInMonth - 1 . ' days');
     }
 
-    public function getCurrentYear(): string
+    public function getCurrentYear(): int
     {
         return $this->dateTime->format('Y');
     }
 
-    public function getCurrentWeek(): string
+    public function getCurrentWeek(): int
     {
         return $this->dateTime->format('W');
     }
 
-    public function getCurrentMonth(): string
+    public function getCurrentMonth(): int
     {
         return $this->dateTime->format('m');
     }
-
 
     public function getNamesDaysOfWeek(): array
     {

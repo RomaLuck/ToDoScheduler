@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Repository\TaskRepository;
 use App\Service\CalendarService;
-use DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,8 +20,12 @@ class CalendarController extends AbstractController
     public function showWeeksCalendar(TaskRepository $repository, Request $request, CalendarService $calendar): Response
     {
         $user = $this->getUser();
+        if ($user === null) {
+            $this->addFlash('danger', 'User is not authorized');
+            return $this->redirectToRoute('app_task');
+        }
         $currentWeek = $request->get('week') ?? $calendar->getCurrentWeek();
-        $firstDayOfWeek = $calendar->getFirstDayOfWeek($currentWeek);
+        $firstDayOfWeek = $calendar->getFirstDayOfWeek($currentWeek, $calendar->getCurrentYear());
         $weekTasks = $repository->findUncompletedTasks($user);
 
         return $this->render('task/week.html.twig', [
@@ -50,15 +53,20 @@ class CalendarController extends AbstractController
     /**
      * @throws \Exception
      */
-    #[Route('/calendar/month/{month?}', name: 'app_month', methods: ['GET'])]
+    #[Route('/calendar/month/{month?}/{year?}', name: 'app_month', methods: ['GET'])]
     public function showMonthCalendar(TaskRepository $repository, Request $request, CalendarService $calendar): Response
     {
         $user = $this->getUser();
+        if ($user === null) {
+            $this->addFlash('danger', 'User is not authorized');
+            return $this->redirectToRoute('app_task');
+        }
+        $year = $request->get('year') ?? $calendar->getCurrentYear();
         $month = $request->get('month') ?? $calendar->getCurrentMonth();
         $monthTasks = $repository->findUncompletedTasks($user);
         return $this->render('task/month.html.twig', [
             'weekDays' => $calendar->getNamesDaysOfWeek(),
-            'dataTimeDayList' => $calendar->getDataTimeDayList($month),
+            'dataTimeDayList' => $calendar->getDataTimeDayList($month, $year),
             'month' => $month,
             'monthTasks' => $monthTasks,
             'currentDate' => $calendar->getCurrentDate(),
@@ -66,16 +74,21 @@ class CalendarController extends AbstractController
     }
 
     #[Route('/calendar/next-month', name: 'next_month')]
-    public function nextMonth(Request $request): Response
+    public function nextMonth(Request $request, CalendarService $calendar): Response
     {
-        $currentMonth = $request->get('month');
-        return $this->redirectToRoute('app_month', ['month' => $currentMonth + 1]);
+        $currentMonth = (int)$request->get('month');
+        $nextMonth = $currentMonth + 1;
+        $currentYear = $calendar->getCurrentYear() + floor($currentMonth / 12);
+
+        return $this->redirectToRoute('app_month', ['month' => $nextMonth, 'year' => $currentYear]);
     }
 
     #[Route('/calendar/previous-month', name: 'previous_month')]
-    public function previousMonth(Request $request): Response
+    public function previousMonth(Request $request, CalendarService $calendar): Response
     {
-        $currentMonth = $request->get('month');
-        return $this->redirectToRoute('app_month', ['month' => $currentMonth - 1]);
+        $currentMonth = (int)$request->get('month');
+        $previousMonth = $currentMonth - 1;
+        $currentYear = $calendar->getCurrentYear() + floor(($previousMonth - 1) / 12);
+        return $this->redirectToRoute('app_month', ['month' => $previousMonth, 'year' => $currentYear]);
     }
 }
