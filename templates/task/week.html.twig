@@ -31,7 +31,7 @@
                                         {% endif %}
                                     {% endfor %}
                                     {#                                    <div class="margin-10px-top font-size14">{{ j|intToTime }}</div> #}
-                                    {#                                                                        <div class="font-size13 text-light-gray">{{ day|date('Y-m-d') }}</div> #}
+                                    <div style="font-size: 10px" class="text-muted">{{ day|date('Y-m-d') }}</div>
                                 </td>
                             {% endfor %}
                         </tr>
@@ -40,9 +40,9 @@
                 </table>
             </div>
             <div class="week-info d-flex justify-content-center fixed-bottom">
-                <a class="btn btn-outline-primary m-3" href="{{ path('previous_week',{'week':week}) }}">Previous</a>
+                <a class="btn btn-outline-primary m-3" href="{{ path('previous_week',{'week':week,'year':year}) }}">Previous</a>
                 <p class="btn btn-outline-primary m-3">Current week: {{ week }}</p>
-                <a class="btn btn-outline-primary m-3" href="{{ path('next_week',{'week':week}) }}">Next</a>
+                <a class="btn btn-outline-primary m-3" href="{{ path('next_week',{'week':week,'year':year}) }}">Next</a>
             </div>
         </div>
     </section>

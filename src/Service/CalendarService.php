@@ -29,7 +29,7 @@ class CalendarService
     /**
      * @throws \Exception
      */
-    private function getFirstWeekOfMonthNumber(int $month, int $year): int
+    public function getFirstWeekOfMonthNumber(int $month, int $year): int
     {
         return $this->getFirstDayOfMonth($month, $year)->format('W');
     }
@@ -45,12 +45,12 @@ class CalendarService
     /**
      * @throws \Exception
      */
-    public function getDataTimeDayList(int $month, $year): array
+    public function getDataTimeDayList(int $month, int $year): array
     {
         $dataTimeDayList = [];
         $weekNumbers = range($this->getFirstWeekOfMonthNumber($month, $year), $this->getLastWeekOfMonthNumber($month, $year));
         foreach ($weekNumbers as $weekNumber) {
-            $firstDayOfWeek = $this->getFirstDayOfCurrentYear($year)->modify('+' . ($weekNumber - 1) . ' weeks')->modify('+1 days');
+            $firstDayOfWeek = $this->getFirstDayOfWeek($weekNumber, $year);
             for ($i = 0; $i < 7; $i++) {
                 $dataTimeDayList[$weekNumber][] = $firstDayOfWeek->modify("+$i days");
             }
@@ -63,15 +63,17 @@ class CalendarService
      */
     public function getFirstDayOfWeek(int $week, int $year): DateTimeImmutable
     {
-        return $this->getFirstDayOfCurrentYear($year)->modify('+' . ($week - 1) . ' weeks')
-            ->modify('+1 days');
+        return new DateTimeImmutable($year . '-W' . sprintf("%02d", $week));
     }
 
-    public function getDaysOfWeek(DateTimeImmutable $firstDayOfWeek): array
+    /**
+     * @throws \Exception
+     */
+    public function getDaysOfWeek(int $week, int $year): array
     {
         $days = [];
         for ($i = 0; $i <= 6; $i++) {
-            $days[] = $firstDayOfWeek->modify('+' . $i . ' days');
+            $days[] = $this->getFirstDayOfWeek($week, $year)->modify('+' . $i . ' days');
         }
         return $days;
     }
@@ -79,9 +81,9 @@ class CalendarService
     /**
      * @throws \Exception
      */
-    private function getFirstDayOfMonth(int $month, $year): DateTimeImmutable
+    public function getFirstDayOfMonth(int $month, int $year): DateTimeImmutable
     {
-        return $this->getFirstDayOfCurrentYear($year)->modify('+' . ($month - 1) . ' month');
+        return new DateTimeImmutable($year . '-' . $month);
     }
 
     /**
@@ -89,8 +91,47 @@ class CalendarService
      */
     private function getLastDayOfMonth(int $month, int $year): DateTimeImmutable
     {
-        $numDaysInMonth = (new DateTimeImmutable($this->getFirstDayOfMonth($month, $year)->format('Y-m-d')))->format('t');
-        return $this->getFirstDayOfMonth($month, $year)->modify('+' . (int)$numDaysInMonth - 1 . ' days');
+        return $this->getFirstDayOfMonth($month, $year)->modify('+' . $this->getNumDaysInMonth($month, $year) - 1 . ' days');
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function getNextWeek(int $week, int $year): DateTimeImmutable
+    {
+        return $this->getFirstDayOfWeek($week, $year)->modify('+1 week');
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function getPreviousWeek(int $week, int $year): DateTimeImmutable
+    {
+        return $this->getFirstDayOfWeek($week, $year)->modify('-1 week');
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function getNextMonth(int $month, int $year): DateTimeImmutable
+    {
+        return $this->getFirstDayOfMonth($month, $year)->modify('+1 month');
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function getPreviousMonth(int $month, int $year): DateTimeImmutable
+    {
+        return $this->getFirstDayOfMonth($month, $year)->modify('-1 month');
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function getNumDaysInMonth(int $month, int $year): int
+    {
+        return $this->getFirstDayOfMonth($month, $year)->format('t');
     }
 
     public function getCurrentYear(): int
