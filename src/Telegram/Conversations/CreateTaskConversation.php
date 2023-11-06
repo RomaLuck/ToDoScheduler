@@ -109,7 +109,6 @@ class CreateTaskConversation extends Conversation
     public function checkHourMinuteDeadline(Nutgram $bot): void
     {
         $answer = trim(htmlspecialchars($bot->message()->text));
-
         if (preg_match('!^(?<hour>([01]\d|2[0-3])) (?<minute>[0-5]\d)$!iu', $answer, $timeMatch)) {
             $hour = sprintf("%02d", $timeMatch['hour']);
             $minute = sprintf("%02d", $timeMatch['minute']);
@@ -118,6 +117,7 @@ class CreateTaskConversation extends Conversation
             $this->askMonthDayDeadline($bot);
             return;
         }
+
         $this->dateTime['hour'] = $hour;
         $this->dateTime['minute'] = $minute;
         $this->recap($bot);
@@ -130,7 +130,6 @@ class CreateTaskConversation extends Conversation
     public function recap(Nutgram $bot): void
     {
         $formattedDataTime = (new \DateTime())->format('Y') . '-' . $this->dateTime['month'] . '-' . $this->dateTime['day'] . 'T' . $this->dateTime['hour'] . ':' . $this->dateTime['minute'];
-
         $task = new Task();
         $task->setTitle($this->title);
         $task->setUser($this->entityManager->getRepository(User::class)->findOneBy(['chat_id' => $bot->chatId()]));

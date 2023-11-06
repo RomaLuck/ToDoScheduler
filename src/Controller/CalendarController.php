@@ -24,9 +24,11 @@ class CalendarController extends AbstractController
             $this->addFlash('danger', 'User is not authorized');
             return $this->redirectToRoute('app_task');
         }
+
         $currentWeek = $request->get('week') ?? $calendar->getCurrentWeek();
         $year = $request->get('year') ?? $calendar->getCurrentYear();
         $weekTasks = $repository->findUncompletedTasks($user);
+
         return $this->render('task/week.html.twig', [
             'currentDate' => $calendar->getCurrentDate(),
             'weekTasks' => $weekTasks,
@@ -45,6 +47,7 @@ class CalendarController extends AbstractController
         $currentWeek = $request->get('week');
         $currentYear = $request->get('year') ?? $calendar->getCurrentYear();
         $nextWeek = $calendar->getNextWeek($currentWeek, $currentYear);
+
         return $this->redirectToRoute('app_week', [
             'week' => $nextWeek->format('W'),
             'year' => $nextWeek->format('Y')
@@ -60,6 +63,7 @@ class CalendarController extends AbstractController
         $currentWeek = $request->get('week');
         $currentYear = $request->get('year') ?? $calendar->getCurrentYear();
         $previousWeek = $calendar->getPreviousWeek($currentWeek, $currentYear);
+
         return $this->redirectToRoute('app_week', [
             'week' => $previousWeek->format('W'),
             'year' => $previousWeek->format('Y')
@@ -77,9 +81,11 @@ class CalendarController extends AbstractController
             $this->addFlash('danger', 'User is not authorized');
             return $this->redirectToRoute('app_task');
         }
+
         $year = $request->get('year') ?? $calendar->getCurrentYear();
         $month = $request->get('month') ?? $calendar->getCurrentMonth();
         $monthTasks = $repository->findUncompletedTasks($user);
+
         return $this->render('task/month.html.twig', [
             'weekDays' => $calendar->getNamesDaysOfWeek(),
             'dataTimeDayList' => $calendar->getDataTimeDayList($month, $year),
@@ -99,6 +105,7 @@ class CalendarController extends AbstractController
         $currentMonth = $request->get('month');
         $currentYear = $request->get('year') ?? $calendar->getCurrentYear();
         $nextMonth = $calendar->getNextMonth((int)$currentMonth, (int)$currentYear);
+
         return $this->redirectToRoute('app_month', [
             'month' => $nextMonth->format('m'),
             'year' => $nextMonth->format('Y')
@@ -114,6 +121,7 @@ class CalendarController extends AbstractController
         $currentMonth = (int)$request->get('month');
         $currentYear = $request->get('year') ?? $calendar->getCurrentYear();
         $previousMonth = $calendar->getPreviousMonth($currentMonth, $currentYear);
+
         return $this->redirectToRoute('app_month', [
             'month' => $previousMonth->format('m'),
             'year' => $previousMonth->format('Y')

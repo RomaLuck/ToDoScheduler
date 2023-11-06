@@ -37,7 +37,6 @@ class SendMessageService
         $users = $this->entityManager->getRepository(User::class)->findAll();
         foreach ($users as $user) {
             $tasks = $this->repository->findUncompletedTasks($user);
-
             foreach ($tasks as $task) {
                 if ($this->isReminderTime($task->getDeadLine(), $currentTime)) {
                     $this->sendTaskReminder($task);
@@ -53,6 +52,7 @@ class SendMessageService
     private function isReminderTime(DateTimeImmutable $deadline, string $currentTime): bool
     {
         $reminderTimeAdjusted = $deadline->format('Y-m-d H:i');
+
         return $reminderTimeAdjusted < $currentTime;
     }
 

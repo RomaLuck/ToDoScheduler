@@ -21,6 +21,7 @@ class DeleteUserHandler
         if ($user === null) {
             return;
         }
+
         $this->entityManager->remove($user);
         $this->entityManager->flush();
         $bot->sendMessage("User has been deleted successfully \xF0\x9F\x98\x9E");

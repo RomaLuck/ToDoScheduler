@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Contracts\CacheInterface;
 use App\Entity\User;
-use App\Repository\UserRepository;
 use App\Service\CountryListService;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Exception\GuzzleException;
@@ -41,7 +40,6 @@ class ProfileController extends AbstractController
         }
 
         $loginUser = $this->getUser();
-
         if ($this->isCsrfTokenValid('update_user', $request->request->get('_csrf_token'))) {
             $user = $entityManager->getRepository(User::class)->find($loginUser);
             if ($user !== null) {

@@ -55,6 +55,7 @@ class CalendarService
                 $dataTimeDayList[$weekNumber][] = $firstDayOfWeek->modify("+$i days");
             }
         }
+
         return $dataTimeDayList;
     }
 
@@ -75,6 +76,7 @@ class CalendarService
         for ($i = 0; $i <= 6; $i++) {
             $days[] = $this->getFirstDayOfWeek($week, $year)->modify('+' . $i . ' days');
         }
+
         return $days;
     }
 
