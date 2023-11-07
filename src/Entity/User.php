@@ -40,6 +40,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $time_zone = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $client_id = null;
+
     public function __construct()
     {
         $this->task = new ArrayCollection();
@@ -165,6 +168,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setTimeZone(?string $time_zone): static
     {
         $this->time_zone = $time_zone;
+
+        return $this;
+    }
+
+    public function getClientId(): ?string
+    {
+        return $this->client_id;
+    }
+
+    public function setClientId(?string $client_id): static
+    {
+        $this->client_id = $client_id;
 
         return $this;
     }
