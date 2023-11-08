@@ -24,7 +24,7 @@ class GoogleController extends AbstractController
             return $this->redirectToRoute('app_task');
         }
         return $clientRegistry
-            ->getClient('facebook_main')
+            ->getClient('google')
             ->redirect([], [
                 'profile', 'email'
             ]);
