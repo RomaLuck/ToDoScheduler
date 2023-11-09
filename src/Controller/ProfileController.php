@@ -16,6 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_USER')]
+#[Route('{_locale<%app.supported.locales%>}')]
 class ProfileController extends AbstractController
 {
     /**

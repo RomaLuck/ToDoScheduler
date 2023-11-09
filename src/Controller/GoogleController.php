@@ -7,6 +7,7 @@ use App\Security\AppCustomAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,7 +38,8 @@ class GoogleController extends AbstractController
         UserPasswordHasherInterface $userPasswordHasher,
         EntityManagerInterface      $entityManager,
         UserAuthenticatorInterface  $userAuthenticator,
-        AppCustomAuthenticator      $authenticator): Response
+        AppCustomAuthenticator      $authenticator,
+        LoggerInterface             $logger): Response
     {
         if ($this->getUser()) {
             return $this->redirectToRoute('app_task');
@@ -73,7 +75,7 @@ class GoogleController extends AbstractController
                 $request
             );
         } catch (IdentityProviderException $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             die;
         }
     }

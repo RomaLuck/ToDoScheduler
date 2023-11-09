@@ -13,44 +13,49 @@
             {% if app.user %}
                 <div class="mb-3">
                     You are logged in as {{ app.user.userIdentifier }}, <a
-                            href="{{ path('app_logout') }}">Logout</a>
+                            href="{{ path('app_logout') }}">{{ Logout|trans|raw }}</a>
                 </div>
             {% endif %}
             <div class="row justify-content-center align-items-center">
                 <div class="col-md-8">
                     <form method="post">
                         <div class="row justify-content-center border border-2 py-5">
-                            <h1 class="h3 mb-3 font-weight-normal text-center">Please sign in</h1>
+                            <h1 class="h3 mb-3 font-weight-normal text-center">{{ 'Please.sign.in'|trans|raw }}</h1>
                             <div class="w-75">
                                 <div class="d-flex flex-row align-items-center justify-content-between py-2">
 
                                     <input type="email" value="{{ last_username }}" name="email" id="inputEmail"
-                                           placeholder="email"
+                                           placeholder="{{ 'email'|trans|raw }}"
                                            class="form-control w-75 mx-1"
                                            autocomplete="email" required>
                                     <button class="btn btn-primary" type="submit">
-                                        Sign in
+                                        {{ 'Sign.in'|trans|raw }}
                                     </button>
                                 </div>
                                 <div class="d-flex flex-row align-items-center justify-content-between py-2">
 
                                     <input type="password" name="password" id="inputPassword"
                                            class="form-control w-75 mx-1"
-                                           placeholder="password"
+                                           placeholder="{{ 'password'|trans|raw }}"
                                            autocomplete="current-password" required>
 
                                     <input type="hidden" name="_csrf_token"
                                            value="{{ csrf_token('authenticate') }}"
                                     >
-                                    <a class="btn btn-danger" href="{{ path('app_register') }}">Register</a>
+                                    <a class="btn btn-danger"
+                                       href="{{ path('app_register') }}">{{ 'Register'|trans|raw }}</a>
                                 </div>
                                 <div class="d-flex flex-column justify-content-center mt-2">
-                                    <a class="btn btn-outline-dark" href="{{ path('connect_google') }}" role="button" style="text-transform:none">
-                                        <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
-                                        Login with Google
+                                    <a class="btn btn-outline-dark" href="{{ path('connect_google') }}" role="button"
+                                       style="text-transform:none">
+                                        <img width="20px" style="margin-bottom:3px; margin-right:5px"
+                                             alt="Google sign-in"
+                                             src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"/>
+                                        {{ 'Login.with'|trans|raw }} Google
                                     </a>
                                     <a class="btn btn-outline-primary mt-2"
-                                       href="{{ path('connect_facebook_start') }}">Login Using Facebook</a>
+                                       href="{{ path('connect_facebook_start') }}">{{ 'Login.with'|trans|raw }}
+                                        Facebook</a>
                                 </div>
                             </div>
                         </div>

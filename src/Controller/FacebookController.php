@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,14 +19,14 @@ use App\Security\AppCustomAuthenticator;
 class FacebookController extends AbstractController
 {
     #[Route('/connect/facebook', name: 'connect_facebook_start')]
-    public function connectAction(ClientRegistry $clientRegistry)
+    public function connectAction(ClientRegistry $clientRegistry): RedirectResponse
     {
         if ($this->getUser()) {
             return $this->redirectToRoute('app_task');
         }
         return $clientRegistry
             ->getClient('facebook_main')
-            ->redirect([],[
+            ->redirect([], [
                 'public_profile', 'email'
             ]);
     }
@@ -32,12 +34,13 @@ class FacebookController extends AbstractController
 
     #[Route('/connect/facebook/check', name: 'connect_facebook_check')]
     public function connectCheckAction(
-        Request $request,
-        ClientRegistry $clientRegistry,
+        Request                     $request,
+        ClientRegistry              $clientRegistry,
         UserPasswordHasherInterface $userPasswordHasher,
-        EntityManagerInterface $entityManager,
-        UserAuthenticatorInterface $userAuthenticator,
-        AppCustomAuthenticator $authenticator):Response
+        EntityManagerInterface      $entityManager,
+        UserAuthenticatorInterface  $userAuthenticator,
+        AppCustomAuthenticator      $authenticator,
+        LoggerInterface             $logger): Response
     {
         if ($this->getUser()) {
             return $this->redirectToRoute('app_task');
@@ -46,9 +49,9 @@ class FacebookController extends AbstractController
 
         try {
             $facebookUser = $client->fetchUser();
-            $existingUser  = $entityManager->getRepository(User::class)
+            $existingUser = $entityManager->getRepository(User::class)
                 ->findOneBy(['email' => $facebookUser->getEmail()]);
-            if($existingUser){
+            if ($existingUser) {
                 return $userAuthenticator->authenticateUser(
                     $existingUser,
                     $authenticator,
@@ -72,7 +75,7 @@ class FacebookController extends AbstractController
                 $request
             );
         } catch (IdentityProviderException $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             die;
         }
     }

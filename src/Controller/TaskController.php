@@ -15,9 +15,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_USER')]
+#[Route('{_locale<%app.supported.locales%>}')]
 class TaskController extends AbstractController
 {
-    #[Route('/', name: 'app_task',methods: ['GET'])]
+    #[Route('/', name: 'app_task', methods: ['GET'])]
     public function index(TaskRepository $taskRepository, Request $request): Response
     {
         $sort = $request->query->get('sortBy') ?? 'createdAt';
