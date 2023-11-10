@@ -9,10 +9,10 @@
                 <table class="table table-bordered text-center">
                     <thead>
                     <tr class="bg-light-gray">
-                        <th class="text-uppercase">Time\Day
+                        <th class="text-uppercase">{{ 'time'|trans|raw }}\{{ 'day'|trans|raw }}
                         </th>
                         {% for day in daysOfWeek %}
-                            <th class="text-uppercase">{{ day|date('l') }}</th>
+                            <th class="text-uppercase">{{ day|date('l')|trans|raw }}</th>
                         {% endfor %}
                     </tr>
                     </thead>
@@ -40,9 +40,9 @@
                 </table>
             </div>
             <div class="week-info d-flex justify-content-center fixed-bottom">
-                <a class="btn btn-outline-primary m-3" href="{{ path('previous_week',{'week':week,'year':year}) }}">Previous</a>
-                <p class="btn btn-outline-primary m-3">Current week: {{ week }}</p>
-                <a class="btn btn-outline-primary m-3" href="{{ path('next_week',{'week':week,'year':year}) }}">Next</a>
+                <a class="btn btn-outline-primary m-3" href="{{ path('previous_week',{'week':week,'year':year}) }}">{{ 'previous'|trans|raw }}</a>
+                <p class="btn btn-outline-primary m-3">{{ 'current.week'|trans|raw }}: {{ week }}</p>
+                <a class="btn btn-outline-primary m-3" href="{{ path('next_week',{'week':week,'year':year}) }}">{{ 'next'|trans|raw }}</a>
             </div>
         </div>
     </section>

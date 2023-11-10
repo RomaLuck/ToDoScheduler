@@ -1,14 +1,64 @@
-My.profile: Мій профіль
-Tasks: Завдання
-Weeks.Calendar: Тижневий календар
-Month.Calendar: Місячний календар
-Log:
+my:
+  profile: Мій профіль
+  todo: Мої завдання
+tasks: Завдання
+weeks:
+  calendar: Тижневий календар
+month:
+  calendar: Місячний календар
+
+log:
   in: Увійти
   out: Вийти
-Sign.in: Увійти
-Please.sign.in: Будь ласка, увійдіть
-Register: Зареєструватись
-Login.with: Увійти через
-Language: Мова
-email: емейл
-password: пароль
+sign:
+  in: Увійти
+please:
+  sign:
+    in: Будь ласка, увійдіть
+register: Реєстрація
+login:
+  with: Увійти через
+language: Мова
+email: Електронна пошта
+password: Пароль
+agree:
+  terms: Умови використання
+close: Закрити
+accept: Погодитись
+
+country: Країна
+select:
+  country: Виберіть вашу країну
+time: Час
+time.zone: Часова зона
+save: Зберегти
+
+add: Додати
+filter: Фільтер
+all: Все
+completed: Виконане
+active: Активне
+has:
+  due:
+    date: Має кінцеву дату виконання
+sort:
+  by: Сортувати за
+added:
+  date: Дата створення
+due:
+  date: Дата виконання
+
+previous: Попередній
+current:
+  month: Актуальний місяць
+  week: Актуальний тиждень
+next: Наступний
+day: День
+
+Monday: Понеділок
+Tuesday: Вівторок
+Wednesday: Середа
+Thursday: Четвер
+Friday: П'ятниця
+Saturday: Субота
+Sunday: Неділя

@@ -1,0 +1,16 @@
+form:
+  label:
+    email: Емейл
+    password: Пароль
+
+  placeholder:
+    email: Введіть ваш емейл
+    password: Введіть ваш пароль
+
+  messages:
+    email: Ваш емейл невалідний
+    password: Введіть будь ласка пароль
+    password_min: Ваш пароль повинен містити мінімум {{ limit }} символів
+    agree_terms: Ви повинні погодитись з умовами використання
+
+

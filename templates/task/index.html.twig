@@ -23,7 +23,7 @@
 
                             <p class="h1 text-center mt-3 mb-4 pb-3 fw-bold">
                                 <i class="fas fa-check-square me-1"></i>
-                                <span class="text-white">My ToDo</span>
+                                <span class="text-white">{{ 'my.todo'|trans|raw }}</span>
                             </p>
                             <form action="{{ path('create_task') }}" method="post">
                                 <div class="pb-2">
@@ -33,7 +33,7 @@
                                                 <div class="col-md-6 my-sm-2">
                                                     <input name="title" type="text" class="form-control form-control-lg"
                                                            id="exampleFormControlInput1"
-                                                           placeholder="Add new...">
+                                                           placeholder="{{ 'add'|trans|raw }}...">
                                                 </div>
                                                 <div class="col-md-4 my-sm-2">
                                                     <input type="datetime-local" class="form-control form-control-lg"
@@ -41,7 +41,7 @@
                                                 </div>
                                                 <div class="col-md-2 my-sm-2">
                                                     <button type="submit"
-                                                            class="btn btn-lg btn-outline-primary px-lg-4 px-md-3">Add
+                                                            class="btn btn-lg btn-outline-primary px-lg-4 px-md-3">{{ 'add'|trans|raw }}
                                                     </button>
                                                 </div>
                                             </div>
@@ -55,25 +55,25 @@
                                 <div class="dropdown">
                                     <button class="btn btn-secondary small dropdown-toggle mx-1" type="button"
                                             data-bs-toggle="dropdown" aria-expanded="false">
-                                        Filter
+                                        {{ 'filter'|trans|raw }}
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="{{ path('app_task',{'filter':'All'}) }}">All</a></li>
-                                        <li><a class="dropdown-item" href="{{ path('app_task',{'filter':'Completed'}) }}">Completed</a></li>
-                                        <li><a class="dropdown-item" href="{{ path('app_task',{'filter':'Active'}) }}">Active</a></li>
-                                        <li><a class="dropdown-item" href="{{ path('app_task',{'filter':'Has-due-date'}) }}">Has due date</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('app_task',{'filter':'All'}) }}">{{ 'all'|trans|raw }}</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('app_task',{'filter':'Completed'}) }}">{{ 'completed'|trans|raw }}</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('app_task',{'filter':'Active'}) }}">{{ 'active'|trans|raw }}</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('app_task',{'filter':'Has-due-date'}) }}">{{ 'has.due.date'|trans|raw }}</a></li>
                                     </ul>
                                 </div>
                                 <div class="dropdown">
                                     <button class="btn btn-secondary small dropdown-toggle" type="button"
                                             data-bs-toggle="dropdown" aria-expanded="false">
-                                        Sort by
+                                        {{ 'sort.by'|trans|raw }}
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item"
-                                               href="{{ path('app_task',{'sortBy':'createdAt'}) }}">Added date</a></li>
+                                               href="{{ path('app_task',{'sortBy':'createdAt'}) }}">{{ 'added.date'|trans|raw }}</a></li>
                                         <li><a class="dropdown-item"
-                                               href="{{ path('app_task',{'sortBy':'deadLine'}) }}">Due Date</a></li>
+                                               href="{{ path('app_task',{'sortBy':'deadLine'}) }}">{{ 'due.date'|trans|raw }}</a></li>
                                     </ul>
                                 </div>
                             </div>

@@ -1,0 +1,46 @@
+terms_list:
+  "
+  <h1>Terms of Use and Data Collection Consent</h1>
+  <h2>1. Introduction</h2>
+  <p>Welcome to our Task Scheduler website ('the Website'). Before you start using
+    our services, please carefully read and understand these <strong>Terms of
+    Use and Data Collection Consent</strong> ('Terms'). By using the
+    Website, you agree to comply with these Terms. If you do not agree with
+    these Terms, please refrain from using our services.</p>
+    <h2>2. Task Scheduler Usage</h2>
+    <p>2.1. The Website provides a platform for managing and scheduling tasks and
+    activities. Users are solely responsible for the content and accuracy of the
+    information they input into the task scheduler.</p>
+    <p>2.2. Users are expected to use the Website in a lawful and responsible
+    manner, respecting the rights and privacy of others.</p>
+    <h2>3. Data Collection and Privacy</h2>
+    <p>3.1. The Website may collect and process personal data in accordance with
+    applicable data protection laws, including but not limited to the General
+    Data Protection Regulation (GDPR) for users within the European Union.</p>
+    <p>3.2. The types of personal data collected may include, but are not limited
+    to, name, email address, and usage data.</p>
+    <p>3.3. We will process personal data for the purpose of providing and improving
+    our services, as well as for communication with users.</p>
+    <p>3.4. Users have the right to access, correct, and delete their personal data
+    in accordance with applicable laws. Please refer to our <a
+    href='#privacy-policy'>Privacy Policy</a> for more details on data
+    handling.</p>
+    <h2 id='privacy-policy'>4. Data Collection Consent</h2>
+    <p>4.1. By using the Website, you consent to the collection and processing of
+    your personal data as described in these Terms and our <a
+    href='#privacy-policy'>Privacy Policy</a>.</p>
+    <p>4.2. You can withdraw your consent at any time by discontinuing the use of
+    our services and contacting us to delete your account and associated
+    data.</p>
+    <h2>5. Updates to the Terms</h2>
+    <p>We reserve the right to modify these Terms at any time. Users will be
+    notified of any significant changes. Continued use of the Website after
+    changes are made constitutes acceptance of the modified Terms.</p>
+    <h2>6. Contact Us</h2>
+    <p>If you have any questions or concerns regarding these Terms, please contact
+    us at <a href='mailto:contact@email.com'>contact@email.com</a>.</p>
+    <p>By using the Task Scheduler website, you acknowledge that you have read,
+    understood, and agreed to these Terms of Use and Data Collection
+    Consent.</p>
+    <p>Last Updated: [ Date ]</p>
+  "

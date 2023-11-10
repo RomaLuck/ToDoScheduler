@@ -1,14 +1,64 @@
-My.profile: My profile
-Tasks: Tasks
-Weeks.Calendar: Weeks Calendar
-Month.Calendar: Month Calendar
-Log:
+my:
+  profile: My profile
+  todo: My ToDo
+tasks: Tasks
+weeks:
+  calendar: Weeks Calendar
+month:
+  calendar: Month Calendar
+
+log:
   in: Log in
   out: Log out
-Sign.in: Sign in
-Please.sign.in: Please sign in
-Register: Register
-Login.with: Login with
-Language: Language
-email: email
-password: password
+sign:
+  in: Sign in
+please:
+  sign:
+    in: Please sign in
+register: Register
+login:
+  with: Login with
+language: Language
+email: Email
+password: Password
+agree:
+  terms: Agree terms
+close: Close
+accept: Accept
+
+country: Country
+select:
+  country: Select your country
+time:
+  zone: Time zone
+save: Save
+
+add: Add
+filter: Filter
+all: All
+completed: Completed
+active: Active
+has:
+  due:
+    date: Has due date
+sort:
+  by: Sort by
+added:
+  date: Added date
+due:
+  date: Due Date
+
+previous: Previous
+current:
+  month: Current month
+  week: Current week
+next: Next
+day: Day
+
+Monday: Monday
+Tuesday: Tuesday
+Wednesday: Wednesday
+Thursday: Thursday
+Friday: Friday
+Saturday: Saturday
+Sunday: Sunday

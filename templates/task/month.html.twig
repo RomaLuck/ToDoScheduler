@@ -10,7 +10,7 @@
                     <thead>
                     <tr class="bg-light-gray">
                         {% for day in weekDays %}
-                            <th class="text-uppercase">{{ day }}</th>
+                            <th class="text-uppercase">{{ day|trans|raw }}</th>
                         {% endfor %}
                     </tr>
                     </thead>
@@ -39,10 +39,10 @@
                 </table>
             </div>
             <div class="week-info d-flex justify-content-center fixed-bottom">
-                <a class="btn btn-outline-primary m-3" href="{{ path('previous_month',{'month':month,'year':year}) }}">Previous</a>
-                <p class="btn btn-outline-primary m-3">Current month: {{ month }}</p>
+                <a class="btn btn-outline-primary m-3" href="{{ path('previous_month',{'month':month,'year':year}) }}">{{ 'previous'|trans|raw }}</a>
+                <p class="btn btn-outline-primary m-3">{{ 'current.month'|trans|raw }}: {{ month }}</p>
                 <a class="btn btn-outline-primary m-3"
-                   href="{{ path('next_month',{'month':month,'year':year}) }}">Next</a>
+                   href="{{ path('next_month',{'month':month,'year':year}) }}">{{ 'next'|trans|raw }}</a>
             </div>
         </div>
     </section>

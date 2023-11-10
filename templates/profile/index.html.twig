@@ -13,28 +13,28 @@
                     <div class="col-md-6 mb-2">
                         <div class="align-items-center">
                             <div class="form-control mb-2">
-                                <label class="form-label" for="profile">Email</label>
+                                <label class="form-label" for="profile">{{ 'email'|trans|raw }}</label>
                                 <input type="text" name="email" class="form-control" value="{{ user.email }}">
                             </div>
                             <div class="form-control mb-2">
-                                <label class="form-label" for="profile">Password</label>
+                                <label class="form-label" for="profile">{{ 'password'|trans|raw }}</label>
                                 <input type="text" name="password" class="form-control">
                             </div>
                             <div class="form-control mb-2">
-                                <label for="profile">Country</label>
+                                <label for="profile">{{ 'country'|trans|raw }}</label>
                                 <select id="countryId" name="countryId" class="form-control">
-                                    <option value="">Select your country</option>
+                                    <option value="">{{ 'select.country'|trans|raw }}</option>
                                     {% for country in countryList %}
                                         <option value="{{ country['Code'] }}">{{ country['Name'] }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
                             <div class="form-control mb-2">
-                                <label for="profile">Time zone</label>
+                                <label for="profile">{{ 'time.zone'|trans|raw }}</label>
                                 <select id="selectedTimezone" name="selectedTimezone" class="form-control"></select>
                             </div>
                             <input type="hidden" name="_csrf_token" value="{{ csrf_token('update_user') }}">
-                            <button class="btn btn-danger px-5 my-3" type="submit">Save</button>
+                            <button class="btn btn-danger px-5 my-3" type="submit">{{ 'save'|trans|raw }}</button>
                         </div>
                     </div>
                 </div>

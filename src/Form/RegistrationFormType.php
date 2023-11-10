@@ -20,9 +20,13 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, [
+                'label' => 'form.label.email',
+                'attr' => [
+                    'placeholder' => 'form.placeholder.email'
+                ],
                 'constraints' => [
                     new Email([
-                        'message' => 'Your email is invalid'
+                        'message' => 'form.messages.email'
                     ])
                 ]
             ])
@@ -35,22 +39,26 @@ class RegistrationFormType extends AbstractType
                 ],
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'You should agree to our terms',
+                        'message' => 'form.messages.agree_terms',
                     ]),
                 ],
             ])
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
+                'label' => 'form.label.password',
                 'mapped' => false,
-                'attr' => ['autocomplete' => 'new-password'],
+                'attr' => [
+                    'autocomplete' => 'new-password',
+                    'placeholder' => 'form.placeholder.password'
+                ],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a password',
+                        'message' => 'form.messages.password',
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        'minMessage' => 'form.messages.password_min',
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),
@@ -62,6 +70,7 @@ class RegistrationFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'translation_domain' => 'registration'
         ]);
     }
 }
