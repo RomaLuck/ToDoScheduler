@@ -33,50 +33,8 @@ class FacebookController extends AbstractController
 
 
     #[Route('/connect/facebook/check', name: 'connect_facebook_check')]
-    public function connectCheckAction(
-        Request                     $request,
-        ClientRegistry              $clientRegistry,
-        UserPasswordHasherInterface $userPasswordHasher,
-        EntityManagerInterface      $entityManager,
-        UserAuthenticatorInterface  $userAuthenticator,
-        AppCustomAuthenticator      $authenticator,
-        LoggerInterface             $logger): Response
+    public function connectCheckAction(): Response
     {
-        if ($this->getUser()) {
-            return $this->redirectToRoute('app_task');
-        }
-        $client = $clientRegistry->getClient('facebook_main');
-
-        try {
-            $facebookUser = $client->fetchUser();
-            $existingUser = $entityManager->getRepository(User::class)
-                ->findOneBy(['email' => $facebookUser->getEmail()]);
-            if ($existingUser) {
-                return $userAuthenticator->authenticateUser(
-                    $existingUser,
-                    $authenticator,
-                    $request
-                );
-            }
-
-            $user = new User();
-            $user->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $user,
-                    $facebookUser->getId()
-                )
-            );
-            $user->setEmail($facebookUser->getEmail());
-            $entityManager->persist($user);
-            $entityManager->flush();
-            return $userAuthenticator->authenticateUser(
-                $user,
-                $authenticator,
-                $request
-            );
-        } catch (IdentityProviderException $e) {
-            $logger->error($e->getMessage());
-            die;
-        }
+        return $this->redirectToRoute('app_task');
     }
 }
