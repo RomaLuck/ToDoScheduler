@@ -43,6 +43,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $client_id = null;
 
+    #[ORM\Column]
+    private ?bool $accepted_terms = null;
+
     public function __construct()
     {
         $this->task = new ArrayCollection();
@@ -181,6 +184,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setClientId(?string $client_id): static
     {
         $this->client_id = $client_id;
+
+        return $this;
+    }
+
+    public function isAcceptedTerms(): ?bool
+    {
+        return $this->accepted_terms;
+    }
+
+    public function setAcceptedTerms(bool $accepted_terms): static
+    {
+        $this->accepted_terms = $accepted_terms;
 
         return $this;
     }

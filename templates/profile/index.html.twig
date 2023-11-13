@@ -14,11 +14,13 @@
                         <div class="align-items-center">
                             <div class="form-control mb-2">
                                 <label class="form-label" for="profile">{{ 'email'|trans|raw }}</label>
-                                <input type="text" name="email" class="form-control" value="{{ user.email }}">
+                                <input type="text" name="email" class="form-control" value="{{ user.email }}"
+                                       {% if app.user.clientId != null %}disabled{% endif %}>
                             </div>
                             <div class="form-control mb-2">
                                 <label class="form-label" for="profile">{{ 'password'|trans|raw }}</label>
-                                <input type="text" name="password" class="form-control">
+                                <input type="text" name="password" class="form-control"
+                                       {% if app.user.clientId != null %}disabled{% endif %}>
                             </div>
                             <div class="form-control mb-2">
                                 <label for="profile">{{ 'country'|trans|raw }}</label>
@@ -33,6 +35,41 @@
                                 <label for="profile">{{ 'time.zone'|trans|raw }}</label>
                                 <select id="selectedTimezone" name="selectedTimezone" class="form-control"></select>
                             </div>
+                            <div class="d-flex">
+                                <div class="form-check">
+                                    <input class="form-check-input" name="accept-terms" type="checkbox" value="1"
+                                           id="form_agreeTerms"
+                                           {% if app.user.acceptedTerms == 1 %}checked{% endif %} required>
+                                </div>
+
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#termsModal">
+                                    <span class="small">{{ 'agree.terms'|trans|raw }}</span>
+                                </button>
+
+                                <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="termsModalLabel">Accept terms</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                {{ 'terms_list'|trans({},'terms_list')|raw }}
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">{{ 'close'|trans|raw }}
+                                                </button>
+                                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                                                        id="accept-terms">{{ 'accept'|trans|raw }}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <input type="hidden" name="_csrf_token" value="{{ csrf_token('update_user') }}">
                             <button class="btn btn-danger px-5 my-3" type="submit">{{ 'save'|trans|raw }}</button>
                         </div>
@@ -46,8 +83,8 @@
     {{ parent() }}
     <script>
         let countrySelect = document.getElementById('countryId');
+        let selectedTimezone = document.getElementById("selectedTimezone");
         countrySelect.addEventListener('change', function () {
-            let selectedTimezone = document.getElementById("selectedTimezone");
             let selectedOption = countrySelect.options[countrySelect.selectedIndex];
             let countryCode = selectedOption.value;
             let params = new URLSearchParams();
@@ -65,5 +102,21 @@
                     });
                 });
         });
+
+        const acceptTermsButton = document.getElementById('accept-terms');
+        const agreeTerms = document.getElementById('form_agreeTerms');
+        agreeTerms.addEventListener('change', getTimeZone)
+        acceptTermsButton.addEventListener('click', function () {
+            agreeTerms.checked = true;
+            getTimeZone();
+        })
+
+        function getTimeZone() {
+            let userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            let option = document.createElement("option");
+            option.textContent = userTimeZone;
+            selectedTimezone.appendChild(option);
+        }
+
     </script>
 {% endblock %}

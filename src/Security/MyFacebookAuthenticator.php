@@ -83,11 +83,11 @@ class MyFacebookAuthenticator extends OAuth2Authenticator implements Authenticat
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        $targetUrl = $this->router->generate('app_task');
+//        $targetUrl = $this->router->generate('app_task');
+//
+//        return new RedirectResponse($targetUrl);
 
-        return new RedirectResponse($targetUrl);
-
-        //return null;
+        return null;
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response

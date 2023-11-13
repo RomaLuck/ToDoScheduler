@@ -44,9 +44,16 @@ class ProfileController extends AbstractController
         if ($this->isCsrfTokenValid('update_user', $request->request->get('_csrf_token'))) {
             $user = $entityManager->getRepository(User::class)->find($loginUser);
             if ($user !== null) {
-                $user->setEmail($request->request->get('email'))
-                    ->setTimeZone($request->request->get('selectedTimezone'));
-                if ($request->request->get('password') !== '') {
+                if ($request->request->get('email') !== null) {
+                    $user->setEmail($request->request->get('email'));
+                }
+                if ($request->request->get('selectedTimezone') !== null) {
+                    $user->setTimeZone($request->request->get('selectedTimezone'));
+                }
+                if ($request->request->get('accept-terms') !== null) {
+                    $user->setAcceptedTerms($request->request->get('accept-terms'));
+                }
+                if ($request->request->get('password') !== null) {
                     $user->setPassword($userPasswordHasher->hashPassword(
                         $user,
                         $request->request->get('password'))

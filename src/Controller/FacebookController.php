@@ -2,19 +2,12 @@
 
 namespace App\Controller;
 
+use App\Repository\UserRepository;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
-use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Entity\User;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
-use App\Security\AppCustomAuthenticator;
 
 class FacebookController extends AbstractController
 {
@@ -33,8 +26,12 @@ class FacebookController extends AbstractController
 
 
     #[Route('/connect/facebook/check', name: 'connect_facebook_check')]
-    public function connectCheckAction(): Response
+    public function connectCheckAction(UserRepository $repository): Response
     {
-        return $this->redirectToRoute('app_task');
+        $user = $repository->find($this->getUser());
+        if ($user !== null && $user->isAcceptedTerms()) {
+            return $this->redirectToRoute('app_task');
+        }
+        return $this->redirectToRoute('app_profile');
     }
 }

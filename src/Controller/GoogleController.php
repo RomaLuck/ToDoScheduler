@@ -2,19 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Security\AppCustomAuthenticator;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\UserRepository;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
-use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 class GoogleController extends AbstractController
 {
@@ -32,8 +25,12 @@ class GoogleController extends AbstractController
     }
 
     #[Route('/connect/google/check', name: 'connect_google_check')]
-    public function connectCheckAction(): Response
+    public function connectCheckAction(UserRepository $repository): Response
     {
-        return $this->redirectToRoute('app_task');
+        $user = $repository->find($this->getUser());
+        if ($user !== null && $user->isAcceptedTerms()) {
+            return $this->redirectToRoute('app_task');
+        }
+        return $this->redirectToRoute('app_profile');
     }
 }

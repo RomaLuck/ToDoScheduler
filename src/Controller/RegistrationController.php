@@ -43,6 +43,7 @@ class RegistrationController extends AbstractController
                 )
             )
                 ->setRoles(['ROLE_USER'])
+                ->setAcceptedTerms(true)
                 ->setTimeZone($request->request->get('time-zone'));
 
             $entityManager->persist($user);

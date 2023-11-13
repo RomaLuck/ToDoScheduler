@@ -65,14 +65,15 @@ class MyGoogleAuthenticator extends OAuth2Authenticator implements Authenticatio
                 }
 
                 $user = new User();
-                $user->setClientId($googleUser->getId());
-                $user->setEmail($email);
-                $user->setPassword(
-                    $this->userPasswordHasher->hashPassword(
-                        $user,
-                        $googleUser->getId()
-                    )
-                );
+                $user->setClientId($googleUser->getId())
+                    ->setEmail($email)
+                    ->setAcceptedTerms(false)
+                    ->setPassword(
+                        $this->userPasswordHasher->hashPassword(
+                            $user,
+                            $googleUser->getId()
+                        )
+                    );
                 $this->entityManager->persist($user);
                 $this->entityManager->flush();
 
@@ -83,11 +84,11 @@ class MyGoogleAuthenticator extends OAuth2Authenticator implements Authenticatio
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        $targetUrl = $this->router->generate('app_task');
+//        $targetUrl = $this->router->generate('app_task');
+//
+//        return new RedirectResponse($targetUrl);
 
-        return new RedirectResponse($targetUrl);
-
-        //return null;
+        return null;
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
