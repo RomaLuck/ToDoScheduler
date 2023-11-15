@@ -25,21 +25,21 @@ class ChangePasswordFormType extends AbstractType
                 'first_options' => [
                     'constraints' => [
                         new NotBlank([
-                            'message' => 'Please enter a password',
+                            'message' => 'form.messages.enter.password',
                         ]),
                         new Length([
                             'min' => 6,
-                            'minMessage' => 'Your password should be at least {{ limit }} characters',
+                            'minMessage' => 'form.messages.minMessage',
                             // max length allowed by Symfony for security reasons
                             'max' => 4096,
                         ]),
                     ],
-                    'label' => 'New password',
+                    'label' => 'form.label.new.password',
                 ],
                 'second_options' => [
-                    'label' => 'Repeat Password',
+                    'label' => 'form.label.repeat.password',
                 ],
-                'invalid_message' => 'The password fields must match.',
+                'invalid_message' => 'form.messages.invalid_message',
                 // Instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 'mapped' => false,
@@ -49,6 +49,8 @@ class ChangePasswordFormType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([]);
+        $resolver->setDefaults([
+            'translation_domain' => 'reset-password'
+        ]);
     }
 }

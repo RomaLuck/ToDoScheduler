@@ -17,15 +17,17 @@ class ResetPasswordRequestFormType extends AbstractType
                 'attr' => ['autocomplete' => 'email'],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter your email',
+                        'message' => 'form.messages.enter.email',
                     ]),
                 ],
-            ])
-        ;
+                'label' => 'form.label.email'
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([]);
+        $resolver->setDefaults([
+            'translation_domain' => 'reset-password'
+        ]);
     }
 }
