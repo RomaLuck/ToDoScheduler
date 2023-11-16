@@ -5,19 +5,19 @@
 {% block body %}
     <section class="login py-5" id="login">
         <div class="container">
-            {% if error %}
-                <div class="alert alert-danger"
-                     role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-            {% endif %}
-
-            {% if app.user %}
-                <div class="mb-3">
-                    You are logged in as {{ app.user.userIdentifier }}, <a
-                            href="{{ path('app_logout') }}">{{ 'log.out'|trans|raw }}</a>
-                </div>
-            {% endif %}
             <div class="row justify-content-center align-items-center">
                 <div class="col-md-8">
+                    {% if error %}
+                        <div class="alert alert-danger"
+                             role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                    {% endif %}
+
+                    {% if app.user %}
+                        <div class="mb-3">
+                            You are logged in as {{ app.user.userIdentifier }}, <a
+                                    href="{{ path('app_logout') }}">{{ 'log.out'|trans|raw }}</a>
+                        </div>
+                    {% endif %}
                     <form method="post">
                         <div class="row justify-content-center border border-2 py-5">
                             <h1 class="h3 mb-3 font-weight-normal text-center">{{ 'please.sign.in'|trans|raw }}</h1>
@@ -58,7 +58,7 @@
                                         Facebook</a>
                                 </div>
                                 <div class="float-end mt-5">
-                                    <a href="{{ path('app_forgot_password_request') }}">Reset password</a>
+                                    <a href="{{ path('app_forgot_password_request') }}">{{ 'reset.password'|trans|raw }}</a>
                                 </div>
                             </div>
                         </div>

@@ -12,7 +12,10 @@
                         <th class="text-uppercase">{{ 'time'|trans|raw }}\{{ 'day'|trans|raw }}
                         </th>
                         {% for day in daysOfWeek %}
-                            <th class="text-uppercase">{{ day|date('l')|trans|raw }}</th>
+                            <th class="text-uppercase">
+                                <div>{{ day|date('l')|trans|raw }}</div>
+                                <div style="font-size: 10px" class="text-muted">{{ day|date('Y-m-d') }}</div>
+                            </th>
                         {% endfor %}
                     </tr>
                     </thead>
@@ -31,7 +34,6 @@
                                         {% endif %}
                                     {% endfor %}
                                     {#                                    <div class="margin-10px-top font-size14">{{ j|intToTime }}</div> #}
-                                    <div style="font-size: 10px" class="text-muted">{{ day|date('Y-m-d') }}</div>
                                 </td>
                             {% endfor %}
                         </tr>
@@ -39,10 +41,10 @@
                     </tbody>
                 </table>
             </div>
-            <div class="week-info d-flex justify-content-center fixed-bottom">
-                <a class="btn btn-outline-primary m-3" href="{{ path('previous_week',{'week':week,'year':year}) }}">{{ 'previous'|trans|raw }}</a>
-                <p class="btn btn-outline-primary m-3">{{ 'current.week'|trans|raw }}: {{ week }}</p>
-                <a class="btn btn-outline-primary m-3" href="{{ path('next_week',{'week':week,'year':year}) }}">{{ 'next'|trans|raw }}</a>
+            <div class="week-info d-flex justify-content-center fixed-bottom flex-column flex-sm-row">
+                <a class="btn btn-outline-primary m-1 m-md-3" href="{{ path('previous_week',{'week':week,'year':year}) }}">{{ 'previous'|trans|raw }}</a>
+                <p class="btn btn-outline-primary m-1 m-md-3">{{ 'current.week'|trans|raw }}: {{ week }}</p>
+                <a class="btn btn-outline-primary m-1 m-md-3" href="{{ path('next_week',{'week':week,'year':year}) }}">{{ 'next'|trans|raw }}</a>
             </div>
         </div>
     </section>

@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Translation\TranslatableMessage;
 
 #[IsGranted('ROLE_USER')]
 #[Route('{_locale<%app.supported.locales%>}')]
@@ -45,7 +46,7 @@ class TaskController extends AbstractController
         $task = new Task();
         $title = trim(htmlspecialchars($request->request->get('title')));
         if (empty($title)) {
-            $this->addFlash('danger', 'Task is empty');
+            $this->addFlash('danger', new TranslatableMessage('empty.task'));
             return $this->redirectToRoute('app_task');
         }
 

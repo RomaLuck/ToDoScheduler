@@ -38,10 +38,10 @@
                     </tbody>
                 </table>
             </div>
-            <div class="week-info d-flex justify-content-center fixed-bottom">
-                <a class="btn btn-outline-primary m-3" href="{{ path('previous_month',{'month':month,'year':year}) }}">{{ 'previous'|trans|raw }}</a>
-                <p class="btn btn-outline-primary m-3">{{ 'current.month'|trans|raw }}: {{ month }}</p>
-                <a class="btn btn-outline-primary m-3"
+            <div class="week-info d-flex justify-content-center fixed-bottom flex-column flex-sm-row">
+                <a class="btn btn-outline-primary m-1 m-md-3" href="{{ path('previous_month',{'month':month,'year':year}) }}">{{ 'previous'|trans|raw }}</a>
+                <p class="btn btn-outline-primary m-1 m-md-3">{{ 'current.month'|trans|raw }}: {{ month }}</p>
+                <a class="btn btn-outline-primary m-1 m-md-3"
                    href="{{ path('next_month',{'month':month,'year':year}) }}">{{ 'next'|trans|raw }}</a>
             </div>
         </div>

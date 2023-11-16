@@ -25,6 +25,7 @@ agree:
   terms: Умови використання
 close: Закрити
 accept: Погодитись
+reset.password: Відновити пароль
 
 country: Країна
 select:
@@ -34,6 +35,7 @@ time.zone: Часова зона
 save: Зберегти
 
 add: Додати
+added: Додано
 filter: Фільтер
 all: Все
 completed: Виконане
@@ -41,12 +43,9 @@ active: Активне
 has:
   due:
     date: Має кінцеву дату виконання
-sort:
-  by: Сортувати за
-added:
-  date: Дата створення
-due:
-  date: Дата виконання
+sort.by: Сортувати за
+added.date: Дата створення
+due.date: Дата виконання
 
 previous: Попередній
 current:
@@ -66,3 +65,4 @@ Sunday: Неділя
 try.again: спробуйте знову
 reset.your.password: Відновити пароль
 send.password.reset.email: Надіслати емейл з відновленим паролем
+empty.task: Завдання порожнє
