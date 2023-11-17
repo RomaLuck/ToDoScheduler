@@ -3,15 +3,19 @@
 namespace App\Security;
 
 use App\Entity\User;
+use App\Event\RegistrationEvent;
+use App\EventSubscriber\RegistrationSubscriber;
 use Doctrine\ORM\EntityManagerInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
 use League\OAuth2\Client\Provider\FacebookUser;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
@@ -23,15 +27,21 @@ class MyFacebookAuthenticator extends OAuth2Authenticator implements Authenticat
 {
     private ClientRegistry $clientRegistry;
     private EntityManagerInterface $entityManager;
-    private RouterInterface $router;
+    private UrlGeneratorInterface $router;
     private UserPasswordHasherInterface $userPasswordHasher;
+    private EventDispatcherInterface $dispatcher;
+    private MailerInterface $mailer;
 
     public function __construct(
+        EventDispatcherInterface    $dispatcher,
+        MailerInterface             $mailer,
         ClientRegistry              $clientRegistry,
         EntityManagerInterface      $entityManager,
         UserPasswordHasherInterface $userPasswordHasher,
-        RouterInterface             $router)
+        UrlGeneratorInterface             $router)
     {
+        $this->dispatcher = $dispatcher;
+        $this->mailer = $mailer;
         $this->userPasswordHasher = $userPasswordHasher;
         $this->clientRegistry = $clientRegistry;
         $this->entityManager = $entityManager;
@@ -75,6 +85,9 @@ class MyFacebookAuthenticator extends OAuth2Authenticator implements Authenticat
                 );
                 $this->entityManager->persist($user);
                 $this->entityManager->flush();
+                $event = new RegistrationEvent($email);
+                $this->dispatcher->dispatch($event, RegistrationEvent::NAME);
+                $this->dispatcher->addSubscriber(new RegistrationSubscriber($this->mailer, $this->router));
 
                 return $user;
             })

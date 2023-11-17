@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 #[Route('{_locale<%app.supported.locales%>}')]
@@ -28,7 +29,8 @@ class RegistrationController extends AbstractController
         UserPasswordHasherInterface $userPasswordHasher,
         UserAuthenticatorInterface  $userAuthenticator,
         AppCustomAuthenticator      $authenticator,
-        EntityManagerInterface      $entityManager
+        EntityManagerInterface      $entityManager,
+        UrlGeneratorInterface             $router,
     ): Response
     {
         $user = new User();
@@ -50,7 +52,7 @@ class RegistrationController extends AbstractController
             $entityManager->flush();
             $event = new RegistrationEvent($form->get('email')->getData());
             $dispatcher->dispatch($event, RegistrationEvent::NAME);
-            $dispatcher->addSubscriber(new RegistrationSubscriber($mailer));
+            $dispatcher->addSubscriber(new RegistrationSubscriber($mailer, $router));
 
             return $userAuthenticator->authenticateUser(
                 $user,
