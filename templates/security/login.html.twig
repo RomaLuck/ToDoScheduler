@@ -48,14 +48,14 @@
                                 <div class="d-flex flex-column justify-content-center mt-2">
                                     <a class="btn btn-outline-dark" href="{{ path('connect_google') }}" role="button"
                                        style="text-transform:none">
-                                        <img width="20px" style="margin-bottom:3px; margin-right:5px"
-                                             alt="Google sign-in"
-                                             src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"/>
+                                        <i class="bi bi-google"></i>
                                         {{ 'login.with'|trans|raw }} Google
                                     </a>
                                     <a class="btn btn-outline-primary mt-2"
-                                       href="{{ path('connect_facebook_start') }}">{{ 'login.with'|trans|raw }}
-                                        Facebook</a>
+                                       href="{{ path('connect_facebook_start') }}">
+                                        <i class="bi bi-facebook"></i>
+                                        {{ 'login.with'|trans|raw }} Facebook
+                                    </a>
                                 </div>
                                 <div class="float-end mt-5">
                                     <a href="{{ path('app_forgot_password_request') }}">{{ 'reset.password'|trans|raw }}</a>

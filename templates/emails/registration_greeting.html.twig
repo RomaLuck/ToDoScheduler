@@ -1,0 +1,62 @@
+{% apply inky_to_html %}
+    <container>
+        <row class="header">
+            <column>
+                <center>
+                    <a href="#">
+                        <img src="#" class="logo" alt="TodoTeam Logo">
+                    </a>
+                </center>
+            </column>
+        </row>
+        <row class="welcome">
+            <column>
+                <spacer size="10"></spacer>
+                <h1>
+                    <center>
+                        Nice to meet you {{ email.toName }}!
+                        <center>
+                </h1>
+                <spacer size="10"></spacer>
+            </column>
+        </row>
+        <row>
+            <column>
+                <center>
+                    <p>
+                        Welcome to <strong>ToDo Manager</strong>.
+                    </p>
+                </center>
+            </column>
+        </row>
+        <row>
+            <column>
+                <center>
+                    <p>
+                        You have successfully registered the following email: <em>{{ email.to[0].address }}</em>
+                    </p>
+                </center>
+            </column>
+        </row>
+        <row>
+            <center>
+                <button href="{{ url('app_task') }}" class="large secondary rounded">Click here to back for our site
+                </button>
+                <button href='{{ telegram_redirect_url }}' class="large success rounded">Or manage your tasks in
+                    telegram
+                </button>
+            </center>
+        </row>
+        <row class="bottom">
+            <column>
+                <center>
+                    <spacer size="15"></spacer>
+                    <div>
+                        Sent with ❤️ from the friendly folks at Todo Team
+                    </div>
+                </center>
+            </column>
+        </row>
+    </container>
+{% endapply %}
+

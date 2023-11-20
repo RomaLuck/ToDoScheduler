@@ -3,10 +3,11 @@
 namespace App\EventSubscriber;
 
 use App\Event\RegistrationEvent;
-use Symfony\Bridge\Twig\Mime\NotificationEmail;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RegistrationSubscriber implements EventSubscriberInterface
@@ -23,15 +24,12 @@ class RegistrationSubscriber implements EventSubscriberInterface
      */
     public function onRegistrationEvent(RegistrationEvent $event): void
     {
-        $email = (new NotificationEmail())
+        $email = (new TemplatedEmail())
+            ->from(new Address('example@example.com', 'TodoTeam'))
             ->to($event->getEmail())
             ->subject('Successfully registration')
-            ->htmlTemplate('emails/comment_notification.html.twig')
-            ->action(
-                'Check out our website',
-                $this->router->generate('app_task', [], UrlGeneratorInterface::ABSOLUTE_URL)
-            )
-            ->content('Thank you for registration! I am happy to see you!');
+            ->htmlTemplate('emails/registration_greeting.html.twig');
+
         $this->mailer->send($email);
     }
 

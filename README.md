@@ -43,6 +43,7 @@ Currently, it is under development.
 ### ToDo
 - Containerization with docker
 - Synchronization with google-calendar
+- Tests
 
 ## Setup
 Work in progress...
