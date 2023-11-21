@@ -56,6 +56,11 @@ class TaskController extends AbstractController
             return $this->redirectToRoute('app_task');
         }
 
+        if ($user->getTimeZone() === null) {
+            $this->addFlash('danger','Please, set your time zone in your profile settings');
+            return $this->redirectToRoute('app_profile');
+        }
+
         $deadline = $request->request->get('deadline');
         if ($deadline) {
             $task->setDeadLine(DateTimeImmutable::createFromFormat('Y-m-d\TH:i', $deadline));

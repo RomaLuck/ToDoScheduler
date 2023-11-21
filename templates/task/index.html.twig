@@ -3,19 +3,6 @@
 {% block title %}ToDoList{% endblock %}
 
 {% block body %}
-    <section class="alert pt-5" id="alert">
-        <div class="container">
-            <div class="row">
-                {% for label, messages in app.flashes %}
-                    {% for message in messages %}
-                        <div class="text-center alert alert-{{ label }}" role="alert">
-                            {{ message|trans|raw }}
-                        </div>
-                    {% endfor %}
-                {% endfor %}
-            </div>
-        </div>
-    </section>
     <section class="tasks">
         <div class="container">
             <div class="row d-flex justify-content-center align-items-center">

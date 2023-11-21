@@ -51,6 +51,19 @@
         </div>
     </nav>
 </section>
+<section class="alert pt-5" id="alert">
+    <div class="container">
+        <div class="row">
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="text-center alert alert-{{ label }}" role="alert">
+                        {{ message|trans|raw }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
 {% block body %}{% endblock %}
 
 {% block javascripts %}

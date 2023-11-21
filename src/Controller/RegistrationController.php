@@ -18,10 +18,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
-#[Route('{_locale<%app.supported.locales%>}')]
 class RegistrationController extends AbstractController
 {
-    #[Route('/register', name: 'app_register')]
+    #[Route('/{_locale}/register', name: 'app_register')]
     public function register(
         EventDispatcherInterface    $dispatcher,
         MailerInterface             $mailer,

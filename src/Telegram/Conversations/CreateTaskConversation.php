@@ -49,7 +49,7 @@ class CreateTaskConversation extends Conversation
     public function askMonthDayDeadline(Nutgram $bot): void
     {
         $bot->sendMessage(
-            text: 'Set deadline (Format: month day) . You can also press the buttons',
+            text: 'Set deadline (Format: day month year) . You can also press the buttons',
             reply_markup: ReplyKeyboardMarkup::make(
                 resize_keyboard: true,
                 one_time_keyboard: true,
@@ -74,9 +74,10 @@ class CreateTaskConversation extends Conversation
             default => $answer,
         };
 
-        if (preg_match('!^(?<month>\d+) (?<day>\d+)$!iu', $date, $dateMatch)) {
-            $month = sprintf("%02d", $dateMatch['month']);
+        if (preg_match('!^(?<day>\d{1,2}) (?<month>\d{1,2}) (?<year>\d{4})$!iu', $date, $dateMatch)) {
             $day = sprintf("%02d", $dateMatch['day']);
+            $month = sprintf("%02d", $dateMatch['month']);
+            $year = $dateMatch['year'];
         } else {
             $bot->sendMessage('Wrong format');
             $this->askMonthDayDeadline($bot);
@@ -89,8 +90,9 @@ class CreateTaskConversation extends Conversation
             return;
         }
 
-        $this->dateTime['month'] = $month;
         $this->dateTime['day'] = $day;
+        $this->dateTime['month'] = $month;
+        $this->dateTime['year'] = $year;
         $this->askHourMinuteDeadline($bot);
     }
 
@@ -129,10 +131,20 @@ class CreateTaskConversation extends Conversation
      */
     public function recap(Nutgram $bot): void
     {
-        $formattedDataTime = (new \DateTime())->format('Y') . '-' . $this->dateTime['month'] . '-' . $this->dateTime['day'] . 'T' . $this->dateTime['hour'] . ':' . $this->dateTime['minute'];
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['chat_id' => $bot->chatId()]);
+        if ($user === null) {
+            $bot->sendMessage('User is not authorized');
+            return;
+        }
+        if ($user->getTimeZone() === null) {
+            $bot->sendMessage('Please, set your time zone on the our web site');
+            return;
+        }
+
+        $formattedDataTime = $this->dateTime['year'] . '-' . $this->dateTime['month'] . '-' . $this->dateTime['day'] . 'T' . $this->dateTime['hour'] . ':' . $this->dateTime['minute'];
         $task = new Task();
         $task->setTitle($this->title);
-        $task->setUser($this->entityManager->getRepository(User::class)->findOneBy(['chat_id' => $bot->chatId()]));
+        $task->setUser($user);
         $task->setCreatedAt();
         $task->setDeadLine(\DateTimeImmutable::createFromFormat('Y-m-d\TH:i', $formattedDataTime));
         $task->setStatus(false);
