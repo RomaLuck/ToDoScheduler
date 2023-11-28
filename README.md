@@ -38,12 +38,12 @@ Currently, it is under development.
 - Translation ukrainian/english languages
 
 ### Current works
-- Registration through the telegram
+- Tests
 
 ### ToDo
 - Containerization with docker
 - Synchronization with google-calendar
-- Tests
+
 
 ## Setup
 Work in progress...
