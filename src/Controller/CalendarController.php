@@ -26,48 +26,22 @@ class CalendarController extends AbstractController
             return $this->redirectToRoute('app_task');
         }
 
-        $currentWeek = $request->get('week') ?? $calendar->getCurrentWeek();
+        $week = $request->get('week') ?? $calendar->getCurrentWeek();
         $year = $request->get('year') ?? $calendar->getCurrentYear();
+        $nextWeek = $calendar->getNextWeek($week, $year);
+        $previousWeek = $calendar->getPreviousWeek($week, $year);
         $weekTasks = $repository->findUncompletedTasks($user);
 
         return $this->render('task/week.html.twig', [
             'currentDate' => $calendar->getCurrentDate(),
             'weekTasks' => $weekTasks,
-            'week' => $currentWeek,
+            'week' => $week,
             'year' => $year,
-            'daysOfWeek' => $calendar->getDaysOfWeek($currentWeek, $year),
-        ]);
-    }
-
-    /**
-     * @throws \Exception
-     */
-    #[Route('/calendar/next-week', name: 'next_week')]
-    public function nextWeek(Request $request, CalendarService $calendar): Response
-    {
-        $currentWeek = $request->get('week');
-        $currentYear = $request->get('year') ?? $calendar->getCurrentYear();
-        $nextWeek = $calendar->getNextWeek($currentWeek, $currentYear);
-
-        return $this->redirectToRoute('app_week', [
-            'week' => $nextWeek->format('W'),
-            'year' => $nextWeek->format('Y')
-        ]);
-    }
-
-    /**
-     * @throws \Exception
-     */
-    #[Route('/calendar/previous-week', name: 'previous_week')]
-    public function previousWeek(Request $request, CalendarService $calendar): Response
-    {
-        $currentWeek = $request->get('week');
-        $currentYear = $request->get('year') ?? $calendar->getCurrentYear();
-        $previousWeek = $calendar->getPreviousWeek($currentWeek, $currentYear);
-
-        return $this->redirectToRoute('app_week', [
-            'week' => $previousWeek->format('W'),
-            'year' => $previousWeek->format('Y')
+            'next_week' => $nextWeek->format('W'),
+            'next_year' => $nextWeek->format('Y'),
+            'previous_week' => $previousWeek->format('W'),
+            'previous_year' => $previousWeek->format('Y'),
+            'daysOfWeek' => $calendar->getDaysOfWeek($week, $year),
         ]);
     }
 
@@ -85,47 +59,21 @@ class CalendarController extends AbstractController
 
         $year = $request->get('year') ?? $calendar->getCurrentYear();
         $month = $request->get('month') ?? $calendar->getCurrentMonth();
+        $nextMonth = $calendar->getNextMonth((int)$month, (int)$year);
+        $previousMonth = $calendar->getPreviousMonth($month, $year);
         $monthTasks = $repository->findUncompletedTasks($user);
 
         return $this->render('task/month.html.twig', [
             'weekDays' => $calendar->getNamesDaysOfWeek(),
-            'dataTimeDayList' => $calendar->getDataTimeDayList($month, $year),
+            'dateTimeDayList' => $calendar->getDateTimeDayList($month, $year),
             'month' => $month,
             'year' => $year,
+            'next_month' => $nextMonth->format('m'),
+            'next_year' => $nextMonth->format('Y'),
+            'previous_month' => $previousMonth->format('m'),
+            'previous_year' => $previousMonth->format('Y'),
             'monthTasks' => $monthTasks,
             'currentDate' => $calendar->getCurrentDate(),
-        ]);
-    }
-
-    /**
-     * @throws \Exception
-     */
-    #[Route('/calendar/next-month', name: 'next_month')]
-    public function nextMonth(Request $request, CalendarService $calendar): Response
-    {
-        $currentMonth = $request->get('month');
-        $currentYear = $request->get('year') ?? $calendar->getCurrentYear();
-        $nextMonth = $calendar->getNextMonth((int)$currentMonth, (int)$currentYear);
-
-        return $this->redirectToRoute('app_month', [
-            'month' => $nextMonth->format('m'),
-            'year' => $nextMonth->format('Y')
-        ]);
-    }
-
-    /**
-     * @throws \Exception
-     */
-    #[Route('/calendar/previous-month', name: 'previous_month')]
-    public function previousMonth(Request $request, CalendarService $calendar): Response
-    {
-        $currentMonth = (int)$request->get('month');
-        $currentYear = $request->get('year') ?? $calendar->getCurrentYear();
-        $previousMonth = $calendar->getPreviousMonth($currentMonth, $currentYear);
-
-        return $this->redirectToRoute('app_month', [
-            'month' => $previousMonth->format('m'),
-            'year' => $previousMonth->format('Y')
         ]);
     }
 }

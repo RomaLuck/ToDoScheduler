@@ -42,9 +42,9 @@
                 </table>
             </div>
             <div class="week-info d-flex justify-content-center fixed-bottom flex-column flex-sm-row">
-                <a class="btn btn-outline-primary m-1 m-md-3" href="{{ path('previous_week',{'week':week,'year':year}) }}">{{ 'previous'|trans|raw }}</a>
+                <a class="btn btn-outline-primary m-1 m-md-3" href="{{ path('app_week',{'week':previous_week,'year':previous_year}) }}">{{ 'previous'|trans|raw }}</a>
                 <p class="btn btn-outline-primary m-1 m-md-3">{{ 'current.week'|trans|raw }}: {{ week }}</p>
-                <a class="btn btn-outline-primary m-1 m-md-3" href="{{ path('next_week',{'week':week,'year':year}) }}">{{ 'next'|trans|raw }}</a>
+                <a class="btn btn-outline-primary m-1 m-md-3" href="{{ path('app_week',{'week':next_week,'year':next_year}) }}">{{ 'next'|trans|raw }}</a>
             </div>
         </div>
     </section>

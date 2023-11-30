@@ -15,15 +15,15 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for dataTimeDays in dataTimeDayList %}
+                    {% for dateTimeDays in dateTimeDayList %}
                         <tr>
-                            {% for dataTimeDay in dataTimeDays %}
-                                <td class="{% if dataTimeDay|date('m') == month %}bg-light-green{% endif %} {% if dataTimeDay|date('d-m-Y') == currentDate|date('d-m-Y') %}border border-2 border-danger{% endif %}">
-                                    <div class="date row justify-content-center my-1">{{ dataTimeDay|date('d-m-Y') }}</div>
+                            {% for dateTimeDay in dateTimeDays %}
+                                <td class="{% if dateTimeDay|date('m') == month %}bg-light-green{% endif %} {% if dateTimeDay|date('d-m-Y') == currentDate|date('d-m-Y') %}border border-2 border-danger{% endif %}">
+                                    <div class="date row justify-content-center my-1">{{ dateTimeDay|date('d-m-Y') }}</div>
                                     <div class="tasks row text-center">
                                         <ul>
                                             {% for task in monthTasks %}
-                                                {% if task.deadLine|date('d-m-Y')== dataTimeDay|date('d-m-Y') %}
+                                                {% if task.deadLine|date('d-m-Y')== dateTimeDay|date('d-m-Y') %}
                                                     <li class="{{ random(['bg-primary','bg-secondary','bg-danger']) }} rounded px-2 py-1">
                                                         <a class="text-white fw-bold text-decoration-none"
                                                            href="{{ path('app_task') }}">{{ task.title }}</a></li>
@@ -39,10 +39,13 @@
                 </table>
             </div>
             <div class="week-info d-flex justify-content-center fixed-bottom flex-column flex-sm-row">
-                <a class="btn btn-outline-primary m-1 m-md-3" href="{{ path('previous_month',{'month':month,'year':year}) }}">{{ 'previous'|trans|raw }}</a>
+                <a class="btn btn-outline-primary m-1 m-md-3"
+                   href="{{ path('app_month',{'month':previous_month,'year':previous_year}) }}">{{ 'previous'|trans|raw }}
+                </a>
                 <p class="btn btn-outline-primary m-1 m-md-3">{{ 'current.month'|trans|raw }}: {{ month }}</p>
                 <a class="btn btn-outline-primary m-1 m-md-3"
-                   href="{{ path('next_month',{'month':month,'year':year}) }}">{{ 'next'|trans|raw }}</a>
+                   href="{{ path('app_month',{'month':next_month,'year':next_year}) }}">{{ 'next'|trans|raw }}
+                </a>
             </div>
         </div>
     </section>

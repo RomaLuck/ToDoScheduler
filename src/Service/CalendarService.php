@@ -45,7 +45,7 @@ class CalendarService
     /**
      * @throws \Exception
      */
-    public function getDataTimeDayList(int $month, int $year): array
+    public function getDateTimeDayList(int $month, int $year): array
     {
         $dataTimeDayList = [];
         $weekNumbers = range($this->getFirstWeekOfMonthNumber($month, $year), $this->getLastWeekOfMonthNumber($month, $year));
