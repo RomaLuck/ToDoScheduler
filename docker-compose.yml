@@ -16,7 +16,7 @@ services:
     build:
       context: ./
     environment:
-      PHP_IDE_CONFIG: "serverName=TodoList"
+      PHP_IDE_CONFIG: "serverName=${SERVER_NAME}"
     volumes:
       - ./app:/app
 

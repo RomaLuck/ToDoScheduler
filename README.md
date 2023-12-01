@@ -1,5 +1,3 @@
-<h1 align="center">Work in progress...</h1>
-
 ## Table of contents
 * [General info](#general-info)
 * [Tools](#tools)
@@ -41,9 +39,30 @@ Currently, it is under development.
 - Tests
 
 ### ToDo
-- Containerization with docker
 - Synchronization with google-calendar
 
-
 ## Setup
-Work in progress...
+Copy the .env.dist file and edit the entries to your needs:
+```
+cp .env.dist .env
+```
+Enter app folder and install Packages
+```
+composer install
+```
+Copy in app folder the .env file and edit the entries to your needs:
+```
+cp .env .env.local
+```
+Start docker-compose to start your environment:
+```
+docker-compose up
+```
+Make migration and migrate
+```
+docker-compose exec php bin/console make:migration
+```
+```
+docker-compose exec php bin/console doctrine:migration:migrate
+```
+That is all. Use application
