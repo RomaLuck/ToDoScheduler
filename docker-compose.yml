@@ -6,10 +6,15 @@ services:
     container_name: nginx
     image: nginx:latest
     ports:
-      - "8000:80"
+      - "8000:443"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./ssl/localhost.crt:/etc/nginx/certs/localhost.crt
+      - ./ssl/localhost.key:/etc/nginx/certs/localhost.key
+      - ./ssl/ssl_password:/etc/nginx/ssl_password
       - ./app:/app
+    networks:
+      - my_network
 
   php:
     container_name: php
@@ -19,6 +24,8 @@ services:
       PHP_IDE_CONFIG: "serverName=${SERVER_NAME}"
     volumes:
       - ./app:/app
+    networks:
+      - my_network
 
   db:
     container_name: db
@@ -34,6 +41,12 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    networks:
+      - my_network
 
 volumes:
   mysql_data:
+
+networks:
+  my_network:
+    external: false
