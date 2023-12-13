@@ -6,7 +6,8 @@ services:
     container_name: nginx
     image: nginx:latest
     ports:
-      - "8000:443"
+      - "8000:80"
+      - "443:443"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - ./ssl/localhost.crt:/etc/nginx/certs/localhost.crt
@@ -38,14 +39,32 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
       - my_network
 
+  db_test:
+    container_name: db_test
+    image: mysql:8.0.33
+    platform: linux/x86_64
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE_TEST}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data_test:/var/lib/mysql
+    networks:
+      - my_network
+
 volumes:
   mysql_data:
+  mysql_data_test:
 
 networks:
   my_network:
